@@ -1,0 +1,474 @@
+{
+  "title": "Vite + React",
+  "count_is": "Bây giờ là {{count}}",
+  "edit_save": "Chỉnh sửa src/App.tsx và lưu để kiểm tra HMR",
+  "read_docs": "Nhấn vào logo Vite và React để tìm hiểu thêm",
+  "section1": {
+    "title": "1. Mời rủ"
+  },
+  "section2": {
+    "title": "2. Đặt câu hỏi"
+  },
+  "section3": {
+    "title": "3. Hội thoại mẫu"
+  },
+  "block1": {
+    "title": "Cẩm nang thực hành - ẩm thực Việt Nam"
+  },
+  "block2": {
+    "title": "Cụm từ tiếng Nhật hữu ích về ăn uống và mời rủ"
+  },
+  "popular_menu": {
+    "title": "Món ăn được yêu thích"
+  },
+  "banner1": {
+    "title": "Thỏa mãn vị giác của bạn"
+  },
+  "banner2": {
+    "title": "Những món ăn tuyệt vời nhất"
+  },
+  "button1": {
+    "title": "Khảo sát ngay"
+  },
+  "button2": {
+    "title": "Tìm hiểu thêm →"
+  },
+  "helpButton": {
+    "title": "Chỉnh sửa"
+  },
+  "saveButton": {
+    "title": "Lưu"
+  },
+  "header": {
+    "nav": {
+      "home": "Trang chủ",
+      "menu": "Thực đơn",
+      "restaurant": "Nhà hàng",
+      "back_to_list": "Quay lại danh sách nhà hàng"
+    },
+    "login": "Đăng nhập",
+    "signup": "Đăng ký",
+    "profile": "Hồ sơ",
+    "log-out": "Đăng xuất",
+    "favorites": "Yêu thích"
+  },
+  "common": {
+    "loading": "Đang tải...",
+    "error": "Lỗi",
+    "retry": "Thử lại",
+    "see_more": "Xem thêm",
+    "user": "Người dùng"
+  },
+  "menu": {
+    "message": {
+      "login_to_fav": "Vui lòng đăng nhập để thêm yêu thích!"
+    },
+    "view_details": "Xem chi tiết",
+    "search": {
+      "placeholder": "Tên món ăn",
+      "button": "Tìm kiếm"
+    },
+    "filter": {
+      "button": "Lọc",
+      "region": "Vùng miền"
+    },
+    "categories": {
+      "main_ingredients": "Nguyên liệu chính",
+      "dish_type": "Loại món ăn",
+      "preference": "Sở thích",
+      "items": {
+        "all": "Tất cả",
+        "beef": "Thịt bò",
+        "pork": "Thịt heo",
+        "chicken": "Thịt gà",
+        "seafood": "Hải sản",
+        "vegetable": "Rau củ / Chay",
+        "noodle": "Món nước",
+        "rice": "Món cơm",
+        "bread": "Món bánh mì",
+        "side_dish": "Món ăn kèm",
+        "salad": "Gỏi / Salad",
+        "hotpot": "Lẩu",
+        "sour": "Chua",
+        "sweet": "Ngọt",
+        "herb": "Hương thảo mộc",
+        "light": "Thanh đạm",
+        "spicy": "Cay"
+      }
+    },
+    "pagination": {
+      "prev": "Trước",
+      "next": "Sau"
+    },
+    "items": {
+      "bunbohue": {
+        "name": "Bún bò Huế",
+        "desc": "Món bún cay đặc trưng miền Trung, thơm mùi sả."
+      },
+      "banhmi": {
+        "name": "Bánh mì",
+        "desc": "Bánh mì Việt Nam kẹp thịt và rau củ."
+      },
+      "comtam": {
+        "name": "Cơm tấm",
+        "desc": "Cơm ăn kèm với nước nắm và thịt nướng."
+      },
+      "pho": {
+        "name": "Phở",
+        "desc": "Phở là món ăn thanh đạm, tao nhã Việt Nam."
+      },
+      "buncha": {
+        "name": "Bún chả",
+        "desc": "Món bún chả Hà Nội với thịt nướng và chả viên trong nước chấm chua ngọt."
+      },
+      "goicuon": {
+        "name": "Gỏi cuốn",
+        "desc": "Món khai vị lành mạnh với tôm, thịt heo, bún và rau sống cuốn trong bánh tráng."
+      },
+      "banhxeo": {
+        "name": "Bánh xèo",
+        "desc": "Bánh xèo vàng giòn với nhân tôm, thịt heo và giá đỗ."
+      }
+    },
+    "no_results": {
+      "title": "Không tìm thấy kết quả nào",
+      "message": "Rất tiếc, chúng tôi không tìm thấy món ăn nào phù hợp với từ khóa \"{{keyword}}\".",
+      "clear_search": "Xóa tìm kiếm"
+    }
+  },
+  "loginPage": {
+    "title": "Đăng nhập",
+    "email": {
+      "label": "Địa chỉ Email",
+      "placeholder": "Nhập địa chỉ email"
+    },
+    "password": {
+      "label": "Mật khẩu",
+      "placeholder": "Mật khẩu"
+    },
+    "button": "Đăng nhập",
+    "directory": {
+      "text": "Chưa có tài khoản?",
+      "link": "Đăng ký ngay"
+    },
+    "success": "Đăng nhập thành công!",
+    "error": {
+      "required": "Bắt buộc",
+      "invalid_email": "Định dạng email không hợp lệ",
+      "failed": "Email hoặc mật khẩu không đúng"
+    }
+  },
+  "registerPage": {
+    "title": "Đăng ký",
+    "firstName": {
+      "label": "Tên",
+      "placeholder": "Shinichi"
+    },
+    "lastName": {
+      "label": "Họ",
+      "placeholder": "Kudo"
+    },
+    "email": {
+      "label": "Địa chỉ Email",
+      "placeholder": "Shinichi@email.com"
+    },
+    "phone": {
+      "label": "Số điện thoại",
+      "placeholder": "0901234567"
+    },
+    "gender": {
+      "label": "Giới tính",
+      "options": {
+        "male": "Nam",
+        "female": "Nữ",
+        "other": "Khác"
+      }
+    },
+    "dob": {
+      "label": "Ngày sinh"
+    },
+    "address": {
+      "label": "Địa chỉ"
+    },
+    "password": {
+      "label": "Mật khẩu"
+    },
+    "confirmPassword": {
+      "label": "Xác nhận mật khẩu"
+    },
+    "button": {
+      "submit": "Đăng ký",
+      "submitting": "Đang đăng ký..."
+    },
+    "footer": {
+      "text": "Đã có tài khoản?",
+      "link": "Đăng nhập"
+    },
+    "success": "Đăng ký thành công!",
+    "error": {
+      "invalid_email": "Định dạng email không hợp lệ",
+      "invalid_phone": "Số điện thoại phải có 10 chữ số bắt đầu bằng 0",
+      "weak_password": "Mật khẩu phải có ít nhất 8 ký tự và chứa 2 trong 3 loại: chữ cái, số, ký hiệu.",
+      "password_mismatch": "Xác nhận mật khẩu không khớp",
+      "failed": "Đăng ký thất bại"
+    }
+  },
+  "foodDetail": {
+    "messages": {
+      "submitted": "Bình luận đã được gửi!"
+    },
+    "backToFoods": "<",
+    "loading": "Đang tải...",
+    "error": "Không thể tải dữ liệu món ăn.",
+    "notFound": "Không tìm thấy món ăn",
+    "rating": {
+      "outOf": "/5",
+      "reviews": "{{count}} đánh giá",
+      "required": "Vui lòng chọn số sao để đánh giá"
+    },
+    "buttons": {
+      "favorite": "Yêu thích",
+      "unfavorite": "Đã thích",
+      "help": "Trợ giúp",
+      "cancel": "Hủy",
+      "comment": "Bình luận",
+      "searchRestaurant": "Tìm nhà hàng",
+      "share": "Chia sẻ",
+      "submitting": "Đang gửi..."
+    },
+    "sections": {
+      "description": "1. Mô tả",
+      "recipe": "2. Công thức",
+      "origin": "3. Nguồn gốc & Câu chuyện",
+      "story": "1. Câu chuyện",
+      "ingredient": "2. Nguyên liệu chính",
+      "taste": "3. Hương vị",
+      "style": "4. Cách ăn ngon kiểu Việt",
+      "comparison": "5. So sánh với ẩm thực Nhật"
+    },
+    "reviews": {
+      "title": "Đánh giá mới nhất",
+      "placeholder": "Viết đánh giá của bạn (tối thiểu 10 ký tự)..."
+    },
+    "language": {
+      "label": "Ngôn ngữ",
+      "ja": "日本語",
+      "vi": "Tiếng Việt",
+      "en": "English"
+    },
+    "shareModal": {
+      "title": "Chia sẻ món ăn",
+      "copyLink": "Sao chép liên kết",
+      "linkCopied": "Đã sao chép liên kết!",
+      "close": "Đóng"
+    }
+  },
+  "restaurant": {
+    "search": {
+      "placeholder": "Tên nhà hàng",
+      "button": "Tìm kiếm"
+    },
+    "filters": {
+      "distance": {
+        "title": "Khoảng cách",
+        "undefined": "Không giới hạn",
+        "all": "Tất cả",
+        "300m": "Trong 300m",
+        "1km": "Trong 1km",
+        "3km": "Trong 3km",
+        "5km": "Trong 5km",
+        "10km": "Trong 10km"
+      },
+      "area": {
+        "title": "Tiện nghi"
+      },
+      "button": "Lọc"
+    },
+    "facilities": {
+      "WiFi": "Wi-Fi miễn phí",
+      "Air Conditioning": "Có điều hòa",
+      "Parking": "Có chỗ đậu xe",
+      "Card Payment": "Thanh toán thẻ/Mã QR",
+      "Private Room": "Phòng riêng",
+      "Beer/Alcohol": "Bia/Rượu",
+      "Takeout": "Mang về",
+      "Late Night": "Mở cửa 24 giờ",
+      "Smoking": "Có chỗ hút thuốc",
+      "RoofSeat": "Có ghế ngồi trên sân thượng"
+    },
+    "location_required": "Cần vị trí để lọc",
+    "details": "Xem chi tiết",
+    "pagination": {
+      "prev": "Trước",
+      "next": "Sau"
+    },
+    "back_to_list": "Quay lại danh sách nhà hàng",
+    "add_review": {
+      "title": "Thêm đánh giá của bạn"
+    },
+    "detail": {
+      "address_title": "1. Địa chỉ",
+      "address_missing": "Chưa cập nhật địa chỉ",
+      "intro_title": "2. Giới thiệu nhà hàng",
+      "intro_text": "{{name}} là một nhà hàng nổi tiếng phục vụ các món ăn Việt Nam truyền thống. Với không gian ấm cúng và thực đơn đa dạng, nhà hàng mang đến trải nghiệm ẩm thực tuyệt vời cho thực khách.",
+      "highlights_title": "3. Điểm nổi bật",
+      "default_highlight1": "Món ăn đa dạng, phong phú",
+      "default_highlight2": "Không gian ấm cúng, thân thiện",
+      "default_highlight3": "Phục vụ tận tình, chu đáo",
+      "contact_title": "4. Thông tin liên hệ",
+      "note_title": "Lưu ý",
+      "note_text": "Nhà hàng có thể đông khách vào giờ cao điểm. Vui lòng đặt bàn trước hoặc đến sớm để tránh chờ đợi.",
+      "menu_title": "Thực đơn",
+      "recommended": "Đề xuất",
+      "default_food_story": "Món ăn ngon, đậm đà hương vị Việt Nam",
+      "view_food": "Xem chi tiết",
+      "latest_reviews": "Đánh giá mới nhất",
+      "no_reviews": "Chưa có đánh giá nào cho nhà hàng này.",
+      "not_found": "Không tìm thấy nhà hàng",
+      "fetch_error": "Không thể tải thông tin nhà hàng. Vui lòng thử lại sau.",
+      "n_a": "Không có",
+      "reviews": "{{count}} đánh giá"
+    }
+  },
+  "ScriptTitle": {
+    "title": "Kịch bản giới thiệu món ăn"
+  },
+  "ScriptLoading": {
+    "title": "Đang tải..."
+  },
+  "FavoritesPage": {
+    "title": "Món ăn yêu thích",
+    "no_favorites": "Bạn chưa có món ăn yêu thích nào.",
+    "browse_menu": "Xem thực đơn"
+  },
+  "profilePage": {
+    "title": "Thông tin cá nhân",
+    "changeAvatar": "Đổi ảnh đại diện",
+    "labels": {
+      "name": "Họ và tên",
+      "email": "Email",
+      "phone": "Số điện thoại",
+      "dob": "Ngày sinh",
+      "address": "Địa chỉ"
+    },
+    "edit": "Sửa",
+    "cancel": "Hủy",
+    "save": "Lưu",
+    "saving": "Đang lưu...",
+    "saveSuccess": "Lưu thành công!",
+    "saveFailed": "Lưu thất bại!",
+    "surveyHistory": {
+      "title": "Lịch sử khảo sát",
+      "questions": {
+        "q1": "1. Bạn thường ăn loại đồ ăn nào?",
+        "q2": "2. Chọn hương vị yêu thích của bạn.",
+        "q3": "3. Bạn có ghét món ăn hay hương vị nào không?",
+        "q4": "4. Điều quan trọng nhất khi ăn uống là gì?",
+        "q5": "5. Bạn có muốn ăn trong phòng riêng không?",
+        "q6": "6. Bạn thường đi ăn với nhóm bao nhiêu người?"
+      },
+      "answers": {
+        "vegetarian": "Đồ chay",
+        "warm": "Đồ nóng",
+        "cold": "Đồ nguội",
+        "sweet": "Ngọt",
+        "salty": "Mặn",
+        "spicy": "Cay",
+        "dog": "Thịt chó",
+        "cat": "Thịt mèo",
+        "taste": "Hương vị",
+        "price": "Giá cả",
+        "health": "Sức khỏe",
+        "private": "Có, phòng riêng",
+        "open": "Không, không gian mở",
+        "any": "Sao cũng được",
+        "people1": "1 người",
+        "people2": "2 người",
+        "people34": "3-4 người"
+      },
+      "delete": "Xóa",
+      "viewRecommendation": "Xem đề xuất",
+      "loading": "Đang tải lịch sử khảo sát...",
+      "none": "Không có",
+      "defaultName": "Khảo sát đã lưu"
+    }
+  },
+  "deliveryPlatforms": {
+    "leftText1": "Nhà hàng",
+    "leftText2": "Việt Nam được đánh giá cao"
+  },
+  "footer": {
+    "text": "Kết nối Nhật Bản và Việt Nam qua ẩm thực.",
+    "members": {
+      "mssv": "MSSV",
+      "name": "Họ và tên",
+      "membernum1": "20225919",
+      "membername1": "Lê Thái Sơn",
+      "membernum2": "20225866",
+      "membername2": "Nguyễn Quốc Khánh",
+      "membernum3": "20225110",
+      "membername3": "Vũ Thị Quỳnh Như",
+      "membernum4": "20225859",
+      "membername4": "Trần Doãn Huy",
+      "membernum5": "20225816",
+      "membername5": "Nguyễn Đức Đại Dương",
+      "membernum6": "20225840",
+      "membername6": "Phạm Long Khánh",
+      "membernum7": "20225803",
+      "membername7": "Cao Thành Đạt"
+    },
+    "foodImage": {
+      "title": "Xem thêm món ăn"
+    }
+  },
+  "survey": {
+    "title": "Khảo sát khẩu vị",
+    "target": "Khảo sát này dành cho ai?",
+    "targetPlaceholder": "Tên (ví dụ: Anh A)",
+    "q1": "1. Bạn thường ăn loại đồ ăn nào?",
+    "q2": "2. Chọn hương vị yêu thích của bạn.",
+    "q3": "3. Bạn có ghét món ăn hay hương vị nào không?",
+    "q4": "4. Điều quan trọng nhất khi ăn uống là gì?",
+    "q5": "5. Bạn có muốn ăn trong phòng riêng không?",
+    "q6": "6. Bạn thường đi ăn với nhóm bao nhiêu người?",
+    "options": {
+      "vegetarian": "Đồ chay",
+      "warm": "Đồ nóng",
+      "cold": "Đồ nguội",
+      "noodle": "Món nước/Mì",
+      "other": "Khác",
+      "sweet": "Ngọt",
+      "sour": "Chua",
+      "salty": "Mặn",
+      "bitter": "Đắng",
+      "umami": "Vị Umami",
+      "spicy": "Cay",
+      "dog": "Thịt chó",
+      "blood": "Tiết canh",
+      "frog": "Thịt ếch",
+      "buffalo": "Thịt trâu",
+      "snake": "Thịt rắn",
+      "organs": "Nội tạng",
+      "taste": "Hương vị",
+      "nutrition": "Dinh dưỡng",
+      "price": "Giá cả",
+      "looks": "Hình thức",
+      "health": "Sức khỏe",
+      "quantity": "Số lượng",
+      "privateYes": "Có, phòng riêng",
+      "privateNo": "Không, không gian mở",
+      "privateAny": "Sao cũng được",
+      "people1": "1 người",
+      "people2": "2 người",
+      "people34": "3-4 người",
+      "people56": "5-6 người",
+      "people7": "7 người trở lên"
+    },
+    "freeText": "Nhập tự do",
+    "save": "Lưu",
+    "search": "Tìm món ăn"
+  },
+  "helpfulpage": {
+    "sectionTitle": "Hướng dẫn giới thiệu ẩm thực Việt Nam"
+  }
+}

@@ -1,0 +1,476 @@
+{
+  "title": "Vite + React",
+  "count_is": "今は {{count}}",
+  "edit_save": "src/App.tsxを編集して保存してHMRを確認してください",
+  "read_docs": "ViteとReactのロゴを押してさらに詳しく学ぶ",
+  "section1": {
+    "title": "1. 誘う"
+  },
+  "section2": {
+    "title": "2. 質問する"
+  },
+  "section3": {
+    "title": "3. 会話例"
+  },
+  "block1": {
+    "title": "ベトナム的料理実施ガイド"
+  },
+  "block2": {
+    "title": "食事や招待に関する役立つ日本語フレーズ"
+  },
+  "popular_menu": {
+    "title": "人気メニュー"
+  },
+  "banner1": {
+    "title": "あなたの味覚を満たす"
+  },
+  "banner2": {
+    "title": "ベストフード"
+  },
+  "button1": {
+    "title": "味のアンケート"
+  },
+  "button2": {
+    "title": "他の似た料理を見る →"
+  },
+  "helpButton": {
+    "title": "食事を観察"
+  },
+  "saveButton": {
+    "title": "保存"
+  },
+  "header": {
+    "nav": {
+      "home": "ホーム",
+      "menu": "メニュー",
+      "restaurant": "レストラン",
+      "phrases": "会話フレーズ"
+    },
+    "login": "ログイン",
+    "signup": "新規登録",
+    "profile": "プロフィール",
+    "log-out": "ログアウト",
+    "favorites": "お気に入り"
+  },
+  "common": {
+    "loading": "読み込み中...",
+    "error": "エラー",
+    "retry": "再試行",
+    "see_more": "もっと詳しく見る",
+    "user": "ユーザー"
+  },
+  "menu": {
+    "message": {
+      "login_to_fav": "お気に入りを追加するにはログインしてください。"
+    },
+    "view_details": "もっと詳しく見る",
+    "search": {
+      "placeholder": "料理名",
+      "button": "検索"
+    },
+    "filter": {
+      "button": "絞り込み",
+      "region": "地域"
+    },
+    "categories": {
+      "main_ingredients": "主な食材",
+      "dish_type": "料理の種類別",
+      "preference": "嗜好別分類",
+      "items": {
+        "all": "全部",
+        "beef": "牛肉",
+        "pork": "豚肉",
+        "chicken": "鶏肉",
+        "seafood": "海鮮",
+        "vegetable": "野菜 / ベジタリアン",
+        "noodle": "麺料理",
+        "rice": "ご飯もの",
+        "bread": "パン料理",
+        "side_dish": "惣菜物",
+        "salad": "サラダ",
+        "hotpot": "鍋料理",
+        "sour": "酸っぱい",
+        "sweet": "甘い",
+        "herb": "ハーブ＆香草",
+        "light": "あっさり",
+        "spicy": "辛い"
+      }
+    },
+    "pagination": {
+      "prev": "前へ",
+      "next": "次へ"
+    },
+    "items": {
+      "bunbohue": {
+        "name": "ブンボーフエ",
+        "desc": "ピリ辛スープの中部風、レモングラス香る。"
+      },
+      "banhmi": {
+        "name": "バインミー",
+        "desc": "フランスパンにハム＆野菜を挟んだベトナムサンドイッチ。"
+      },
+      "comtam": {
+        "name": "コムタム",
+        "desc": "焼豚、卵焼き、豚皮などと共に食べる、ベトナム南部の定番米料理。"
+      },
+      "pho": {
+        "name": "フォー",
+        "desc": "柔らかい牛肉と香りのよいスープが特徴の、ベトナムを代表する米麺料理。"
+      },
+      "buncha": {
+        "name": "ブンチャー",
+        "desc": "炭火焼豚肉とつくねを甘酸っぱいタレでいただくハノイ名物のつけ麺。"
+      },
+      "goicuon": {
+        "name": "ゴイクォン",
+        "desc": "エビ、豚肉、ビーフン、新鮮な野菜をライスペーパーで巻いたヘルシーな前菜。"
+      },
+      "banhxeo": {
+        "name": "バインセオ",
+        "desc": "エビと豚肉、もやし入りの、黄色くパリパリしたベトナム風のお好み焼き。"
+      }
+    },
+    "no_results": {
+      "title": "検索結果が見つかりません",
+      "message": "キーワード「{{keyword}}」に一致する料理は見つかりませんでした。",
+      "clear_search": "検索をクリア"
+    }
+  },
+  "loginPage": {
+    "title": "ログイン",
+    "email": {
+      "label": "メールアドレス",
+      "placeholder": "メールアドレスを入力してください"
+    },
+    "password": {
+      "label": "パスワード",
+      "placeholder": "パスワード"
+    },
+    "button": "ログイン",
+    "directory": {
+      "text": "アカウントをお持ちでない方は",
+      "link": "こちら"
+    },
+    "success": "ログインに成功しました！",
+    "error": {
+      "required": "必須項目です",
+      "invalid_email": "メールアドレスの形式が正しくありません",
+      "failed": "メールアドレスまたはパスワードが間違っています"
+    }
+  },
+  "registerPage": {
+    "title": "登録フォーム",
+    "firstName": {
+      "label": "名",
+      "placeholder": "Shinichi"
+    },
+    "lastName": {
+      "label": "姓",
+      "placeholder": "Kudo"
+    },
+    "email": {
+      "label": "メールアドレス",
+      "placeholder": "Shinichi@email.com"
+    },
+    "phone": {
+      "label": "電話番号",
+      "placeholder": "090-1234-5678"
+    },
+    "gender": {
+      "label": "性別",
+      "options": {
+        "male": "男性",
+        "female": "女性",
+        "other": "その他"
+      }
+    },
+    "dob": {
+      "label": "生年月日"
+    },
+    "address": {
+      "label": "住所"
+    },
+    "password": {
+      "label": "パスワード"
+    },
+    "confirmPassword": {
+      "label": "パスワード確認"
+    },
+    "button": {
+      "submit": "送信",
+      "submitting": "送信中..."
+    },
+    "footer": {
+      "text": "アカウントをお持ちですか？",
+      "link": "ログイン"
+    },
+    "success": "登録が完了しました！",
+    "error": {
+      "invalid_email": "メールアドレスの形式が正しくありません",
+      "invalid_phone": "電話番号は0から始まる10桁の数字である必要があります",
+      "weak_password": "パスワードは8文字以上で、文字、数字、記号のうち2つ以上を含む必要があります。",
+      "password_mismatch": "パスワードが一致しません",
+      "failed": "登録に失敗しました"
+    }
+  },
+  "foodDetail": {
+    "messages": {
+      "submitted": "レビューを送信しました！"
+    },
+    "backToFoods": "<",
+    "loading": "読み込み中...",
+    "error": "食品データの読み込みに失敗しました。",
+    "notFound": "食品が見つかりません",
+    "rating": {
+      "outOf": "/5",
+      "reviews": "{{count}}件のレビュー"
+    },
+    "buttons": {
+      "favorite": "お気に入り登録",
+      "unfavorite": "お気に入った",
+      "help": "お手伝い",
+      "cancel": "キャンセル",
+      "comment": "コメントする",
+      "searchRestaurant": "レストラン検索",
+      "share": "共有",
+      "submitting": "送信中..."
+    },
+    "sections": {
+      "description": "1. 説明",
+      "recipe": "2. レシピ",
+      "origin": "3. 起源とストーリー",
+      "story": "1. ストーリー",
+      "ingredient": "2. 主な使用材料",
+      "taste": "3. 味わいについて",
+      "style": "4. ベトナム流・美味しい食べ方",
+      "comparison": "5. 日本料理との比較"
+    },
+    "reviews": {
+      "title": "最新レビュー",
+      "placeholder": "レビューを入力してください（10文字以上）"
+    },
+    "language": {
+      "label": "言語",
+      "ja": "日本語",
+      "vi": "Tiếng Việt",
+      "en": "English"
+    },
+    "shareModal": {
+      "title": "料理を共有する",
+      "copyLink": "リンクをコピー",
+      "linkCopied": "リンクがコピーされました！",
+      "close": "閉じる"
+    }
+  },
+  "restaurant": {
+    "search": {
+      "placeholder": "レストラン名",
+      "button": "検索"
+    },
+    "filters": {
+      "distance": {
+        "title": "現在地からの距離",
+        "undefined": "指定なし",
+        "300m": "300m以内",
+        "1km": "1km以内",
+        "3km": "3 km以内",
+        "5km": "5 km以内",
+        "10km": "10 km以内"
+      },
+      "area": {
+        "title": "アメニティ",
+        "downtown": "料理中心",
+        "cardPayment": "カードOK決済可",
+        "smokingArea": "授煙席あり",
+        "parking": "駐車場あり",
+        "24hours": "24時間営業",
+        "terrace": "テラス席あり"
+      },
+      "button": "絞り込み"
+    },
+    "facilities": {
+      "WiFi": "無料Wi-Fi",
+      "Air Conditioning": "エアコン",
+      "Parking": "駐車場あり",
+      "Card Payment": "カード/QR決済可",
+      "Private Room": "個室",
+      "Beer/Alcohol": "アルコール",
+      "Takeout": "テイクアウト",
+      "Late Night": "24時間営業",
+      "Smoking": "喫煙席あり",
+      "RoofSeat": "テラス席あり"
+    },
+    "location_required": "位置情報が必要です",
+    "details": "もっと詳しく見る",
+    "pagination": {
+      "prev": "前へ",
+      "next": "次へ"
+    },
+    "back_to_list": "レストラン一覧に戻る",
+    "add_review": {
+      "title": "レビューを追加"
+    }
+  ,
+    "detail": {
+      "address_title": "1. 住所",
+      "address_missing": "住所は登録されていません",
+      "intro_title": "2. 店舗紹介",
+      "intro_text": "{{name}} は、伝統的なベトナム料理を提供する有名なレストランです。居心地の良い雰囲気と多彩なメニューで、来店される方に素晴らしい食体験を提供します。",
+      "highlights_title": "おすすめポイント",
+      "default_highlight1": "料理の種類が豊富",
+      "default_highlight2": "居心地の良い雰囲気",
+      "default_highlight3": "丁寧なサービス",
+      "contact_title": "連絡先情報",
+      "note_title": "ご注意",
+      "note_text": "混雑する時間帯があります。予約するか早めにお越しください。",
+      "menu_title": "メニュー",
+      "recommended": "おすすめ",
+      "default_food_story": "本場ベトナムの風味豊かな美味しい料理です",
+      "view_food": "詳細を見る",
+      "latest_reviews": "最新のレビュー",
+      "no_reviews": "この店舗にはまだレビューがありません。",
+      "not_found": "店舗が見つかりません",
+      "fetch_error": "店舗情報の取得に失敗しました。後ほど再度お試しください。",
+      "n_a": "該当なし",
+      "reviews": "{{count}}件のレビュー"
+    }
+  },
+  "ScriptTitle": {
+    "title": "料理紹介スクリプト"
+  },
+  "ScriptLoading": {
+    "title": "読み込み中..."
+  },
+  "FavoritesPage": {
+    "title": "好きな食べ物",
+    "no_favorites": "まだお気に入りの料理がありません。",
+    "browse_menu": "メニューを閲覧する"
+  },
+  "profilePage": {
+    "title": "個人情報",
+    "changeAvatar": "アバターを変更",
+    "labels": {
+      "name": "名前",
+      "email": "メール",
+      "phone": "電話番号",
+      "dob": "生年月日",
+      "address": "住所"
+    },
+    "edit": "編集",
+    "cancel": "キャンセル",
+    "save": "保存",
+    "saving": "保存中...",
+    "saveSuccess": "保存しました！",
+    "saveFailed": "保存に失敗しました！",
+    "surveyHistory": {
+      "title": "アンケート履歴",
+      "questions": {
+        "q1": "1. 普段よく食べる料理のジャンルはどれですか？",
+        "q2": "2. 好きな味を選んでください。",
+        "q3": "3. 嫌いな食べ物や苦手な味はありますか？",
+        "q4": "4. 食事のときに一番大切にしていることは何ですか？",
+        "q5": "5. 個室で食事をしたいですか？",
+        "q6": "6. 何人くらいのグループで食事をしますか？"
+      },
+      "answers": {
+        "vegetarian": "ベジタリアン料理",
+        "warm": "温かい料理",
+        "cold": "冷たい料理",
+        "sweet": "甘い",
+        "salty": "塩辛い",
+        "spicy": "辛い",
+        "dog": "犬肉",
+        "cat": "カエル",
+        "taste": "味",
+        "price": "価格",
+        "health": "健康志向",
+        "private": "はい、個室がいい",
+        "open": "いいえ、オープンスペースがいい",
+        "any": "どちらでもいい",
+        "people1": "1人",
+        "people2": "2人",
+        "people34": "3～4人"
+      },
+      "delete": "削除",
+      "viewRecommendation": "提案を見る"
+    }
+  },
+  "deliveryPlatforms": {
+    "leftText1": "高評価の",
+    "leftText2": "ベトナム料理店"
+  },
+  "footer": {
+    "text": "日本とベトナムを食でつなぐ。",
+    "members": {
+      "mssv": "学籍番号",
+      "name": "名前",
+      "membernum1": "20225919",
+      "membername1": "レ・ダイ・ソン",
+      "membernum2": "20225866",
+      "membername2": "グエン・クオック・カーン",
+      "membernum3": "20225110",
+      "membername3": "ヴー・ティ・クイン・ヌー",
+      "membernum4": "20225859",
+      "membername4": "トラン・ドアン・フイ",
+      "membernum5": "20225816",
+      "membername5": "グエン・ドゥック・ダイ・ドゥオン",
+      "membernum6": "20225840",
+      "membername6": "ファム・ロン・カン",
+      "membernum7": "20225803",
+      "membername7": "カオ・タン・ダット"
+    },
+    "foodImage": {
+      "title": "料理をもっと見る"
+    }
+  },
+  "survey": {
+    "title": "味のアンケート",
+    "target": "このアンケートは、どの国の人の味の好みに関するものですか？",
+    "targetPlaceholder": "A さん",
+    "q1": "1. 普段よく食べる料理のジャンルはどれですか？",
+    "q2": "2. 好きな味を選んでください。",
+    "q3": "3. 嫌いな食べ物や苦手な味はありますか？",
+    "q4": "4. 食事のときに一番大切にしていることは何ですか？",
+    "q5": "5. 個室で食事をしたいですか？",
+    "q6": "6. 何人くらいのグループで食事をしますか？",
+    "options": {
+      "vegetarian": "ベジタリアン料理",
+      "warm": "温かい料理",
+      "cold": "冷たい料理",
+      "noodle": "汁物・麺類",
+      "other": "その他",
+      "sweet": "甘い",
+      "sour": "酸っぱい",
+      "salty": "塩辛い",
+      "bitter": "苦い",
+      "umami": "うま味",
+      "spicy": "辛い",
+      "dog": "犬肉",
+      "blood": "血を使った料理",
+      "frog": "カエル",
+      "buffalo": "水牛肉",
+      "snake": "ヘビ",
+      "organs": "ホルモン / レバーなど",
+      "taste": "味",
+      "nutrition": "栄養",
+      "price": "価格",
+      "looks": "見た目",
+      "health": "健康志向",
+      "quantity": "量",
+      "privateYes": "はい、個室がいい",
+      "privateNo": "いいえ、オープンスペースがいい",
+      "privateAny": "どちらでもいい",
+      "people1": "1人",
+      "people2": "2人",
+      "people34": "3~4人",
+      "people56": "5~6人",
+      "people7": "7人以上"
+    },
+    "freeText": "自由記入",
+    "save": "保存する",
+    "search": "料理を探す"
+  },
+  "helpfulpage":{
+    "sectionTitle":"ベトナム料理紹介ガイド"
+  }
+}

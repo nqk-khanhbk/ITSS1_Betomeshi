@@ -1,0 +1,483 @@
+{
+  "title": "Vite + React",
+  "count_is": "count is {{count}}",
+  "edit_save": "Edit src/App.tsx and save to test HMR",
+  "read_docs": "Click on the Vite and React logos to learn more",
+  "section1": {
+    "title": "1. Invite"
+  },
+  "section2": {
+    "title": "2. Ask Questions"
+  },
+  "section3": {
+    "title": "3. Sample Dialogue"
+  },
+  "block1": {
+    "title": "Vietnamese Culinary Practice Guide"
+  },
+  "block2": {
+    "title": "Helpful Japanese Phrases for Food & Invitations"
+  },
+  "popular_menu": {
+    "title": "Popular Food"
+  },
+  "recommendation": {
+    "title": "Recommended For You"
+  },
+  "banner1": {
+    "title": "Satisfy Your Taste Buds"
+  },
+  "banner2": {
+    "title": "Best Foods"
+  },
+  "button1": {
+    "title": "🍣 Take the Survey"
+  },
+  "button2": {
+    "title": "Explore More →"
+  },
+  "helpButton": {
+    "title": "Edit"
+  },
+  "saveButton": {
+    "title": "save"
+  },
+  "header": {
+    "nav": {
+      "home": "Home",
+      "menu": "Menu",
+      "restaurant": "Restaurant",
+      "phrases": "Phrases"
+    },
+    "login": "Login",
+    "signup": "Sign Up",
+    "profile": "Profile",
+       "back_to_list": "Back to Restaurant List",
+    "favorites": "Favorites"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "retry": "Retry",
+    "see_more": "See More",
+    "user": "User"
+  },
+  "menu": {
+    "message": {
+      "login_to_fav": "Please login to add favorite"
+    },
+    "view_details": "View Details",
+    "search": {
+      "placeholder": "Dish name",
+      "button": "Search"
+    },
+    "filter": {
+      "button": "Filter",
+      "region": "Region"
+    },
+    "categories": {
+      "main_ingredients": "Main Ingredients",
+      "dish_type": "Dish Type",
+      "preference": "Preference",
+      "items": {
+        "all": "All",
+        "beef": "Beef",
+        "pork": "Pork",
+        "chicken": "Chicken",
+        "seafood": "Seafood",
+        "vegetable": "Vegetable / Vegetarian",
+        "noodle": "Noodle Dish",
+        "rice": "Rice Dish",
+        "bread": "Bread Dish",
+        "side_dish": "Side Dish",
+        "salad": "Salad",
+        "hotpot": "Hotpot",
+        "sour": "Sour",
+        "sweet": "Sweet",
+        "herb": "Herbs & Spices",
+        "light": "Light",
+        "spicy": "Spicy"
+      }
+    },
+    "pagination": {
+      "prev": "Prev",
+      "next": "Next"
+    },
+    "items": {
+      "bunbohue": {
+        "name": "Bun Bo Hue",
+        "desc": "Spicy Central Vietnamese noodle soup with lemongrass."
+      },
+      "banhmi": {
+        "name": "Banh Mi",
+        "desc": "Vietnamese sandwich with meat and vegetables."
+      },
+      "comtam": {
+        "name": "Com Tam",
+        "desc": "Vietnamese rice with pickled vegetables and grilled pork."
+      },
+      "pho": {
+        "name": "Pho",
+        "desc": "Vietnamese noodle soup with beef broth, rice noodles, and herbs."
+      },
+      "buncha": {
+        "name": "Bun Cha",
+        "desc": "Hanoi specialty dipping noodles with grilled pork and meatballs in sweet and sour sauce."
+      },
+      "goicuon": {
+        "name": "Goi Cuon",
+        "desc": "Healthy appetizer with shrimp, pork, vermicelli, and fresh vegetables wrapped in rice paper."
+      },
+      "banhxeo": {
+        "name": "Banh Xeo",
+        "desc": "Yellow crispy Vietnamese pancake with shrimp, pork, and bean sprouts."
+      }
+    },
+    "no_results": {
+      "title": "No results found",
+      "message": "Sorry, we couldn't find any food matching the keyword \"{{keyword}}\".",
+      "clear_search": "Clear search"
+    }
+  },
+  "loginPage": {
+    "title": "Login",
+    "email": {
+      "label": "Email Address",
+      "placeholder": "Enter email address"
+    },
+    "password": {
+      "label": "Password",
+      "placeholder": "Password"
+    },
+    "button": "Login",
+    "directory": {
+      "text": "Don't have an account?",
+      "link": "Click here"
+    },
+    "success": "Login successful!",
+    "error": {
+      "required": "Required",
+      "invalid_email": "Invalid email format",
+      "failed": "Invalid email or password"
+    }
+  },
+  "registerPage": {
+    "title": "Register",
+    "firstName": {
+      "label": "First Name",
+      "placeholder": "Shinichi"
+    },
+    "lastName": {
+      "label": "Last Name",
+      "placeholder": "Kudo"
+    },
+    "email": {
+      "label": "Email Address",
+      "placeholder": "Shinichi@email.com"
+    },
+    "phone": {
+      "label": "Phone Number",
+      "placeholder": "0901234567"
+    },
+    "gender": {
+      "label": "Gender",
+      "options": {
+        "male": "Male",
+        "female": "Female",
+        "other": "Other"
+      }
+    },
+    "dob": {
+      "label": "Date of Birth"
+    },
+    "address": {
+      "label": "Address"
+    },
+    "password": {
+      "label": "Password"
+    },
+    "confirmPassword": {
+      "label": "Confirm Password"
+    },
+    "button": {
+      "submit": "Sign Up",
+      "loading": "Registering..."
+    },
+    "footer": {
+      "text": "Already have an account?",
+      "link": "Login"
+    },
+    "success": "Registration successful!",
+    "error": {
+      "invalid_email": "Invalid email format",
+      "invalid_phone": "Phone number must be 10 digits starting with 0",
+      "weak_password": "Password must be at least 8 chars and contain 2 of 3 types: letters, numbers, symbols.",
+      "password_mismatch": "Passwords do not match",
+      "failed": "Registration failed"
+    }
+  },
+  "foodDetail": {
+    "messages": {
+      "submitted": "Review submitted successfully!"
+    },
+    "backToFoods": "<",
+    "loading": "Loading...",
+    "error": "Failed to load food data.",
+    "notFound": "Food not found",
+    "rating": {
+      "outOf": "/5",
+      "reviews": "{{count}} reviews"
+    },
+    "buttons": {
+      "favorite": "Add to Favorites",
+      "unfavorite": "Added to Favorites",
+      "help": "Help",
+      "cancel": "Cancel",
+      "comment": "Comment",
+      "searchRestaurant": "Search Restaurant",
+      "share": "Share",
+      "submitting": "Submitting..."
+    },
+    "sections": {
+      "description": "1. Description",
+      "recipe": "2. Recipe",
+      "origin": "3. Origin Story",
+      "story": "1. Story",
+      "ingredient": "2. Main Ingredients",
+      "taste": "3. Taste Profile",
+      "style": "4. Vietnamese Style - How to Enjoy",
+      "comparison": "5. Comparison with Japanese Cuisine"
+    },
+    "reviews": {
+      "title": "Latest Reviews",
+      "placeholder": "Input your review here (min 10 characters)."
+    },
+    "language": {
+      "label": "Language",
+      "ja": "日本語",
+      "vi": "Tiếng Việt",
+      "en": "English"
+    },
+    "shareModal": {
+      "title": "Share this Dish",
+      "copyLink": "Copy Link",
+      "linkCopied": "Link copied!",
+      "close": "Close"
+    }
+  },
+  "restaurant": {
+    "search": {
+      "placeholder": "Restaurant name",
+      "button": "Search"
+    },
+    "filters": {
+      "distance": {
+        "title": "Distance",
+        "undefined": "Undefined",
+        "all": "All",
+        "300m": "Within 300m",
+        "1km": "Within 1km",
+        "3km": "Within 3km",
+        "5km": "Within 5km",
+        "10km": "Within 10km"
+      },
+      "area": {
+        "title": "Facilities",
+        "downtown": "Downtown",
+        "cardPayment": "Card/QR code Payment",
+        "smokingArea": "Smoking Area",
+        "parking": "Parking",
+        "24hours": "24 Hours",
+        "terrace": "Terrace Seating"
+      },
+      "button": "Filter"
+    },
+    "facilities": {
+      "WiFi": "Free Wi-Fi",
+      "Air Conditioning": "Air Conditioning",
+      "Parking": "Parking",
+      "Card Payment": "Card/QR code Payment",
+      "Private Room": "Private Room",
+      "Beer/Alcohol": "Beer/Alcohol",
+      "Takeout": "Takeout",
+      "Late Night": "Open all night",
+      "Smoking": "Smoking Seats",
+      "RoofSeat": "Roof Seats"
+    },
+    "location_required": "Location required",
+    "details": "View Details",
+    "pagination": {
+      "prev": "Prev",
+      "next": "Next"
+    },
+    "back_to_list": "Back to Restaurant List",
+    "add_review": {
+      "title": "Add Your Review"
+    },
+    "detail": {
+      "address_title": "1. Address",
+      "address_missing": "Address not available",
+      "intro_title": "2. Restaurant Introduction",
+      "intro_text": "{{name}} is a well-known restaurant serving traditional Vietnamese dishes. With a cozy atmosphere and a varied menu, it offers a great dining experience for guests.",
+      "highlights_title": "Highlights",
+      "default_highlight1": "Varied and diverse dishes",
+      "default_highlight2": "Cozy, friendly atmosphere",
+      "default_highlight3": "Attentive service",
+      "contact_title": "Contact Information",
+      "note_title": "Note",
+      "note_text": "The restaurant may be busy during peak hours. Please book in advance or arrive early to avoid waiting.",
+      "menu_title": "Menu",
+      "recommended": "Recommended",
+      "default_food_story": "Delicious dishes rich in authentic Vietnamese flavors",
+      "view_food": "View Details",
+      "latest_reviews": "Latest Reviews",
+      "no_reviews": "There is no review for this restaurant yet.",
+      "not_found": "Restaurant not found",
+      "fetch_error": "Can't fetch restaurant details. Please try again later.",
+      "n_a": "N/A"
+      ,
+      "reviews": "{{count}} reviews"
+    }
+  },
+  "ScriptTitle": {
+    "title": "Dish Introduction Script"
+  },
+  "ScriptLoading": {
+    "title": "Loading..."
+  },
+  "FavoritesPage": {
+    "title": "Favorite Foods",
+    "no_favorites": "You have no favorite dishes yet.",
+    "browse_menu": "Browse Menu"
+  },
+  "profilePage": {
+    "title": "Personal Information",
+    "changeAvatar": "Change Avatar",
+    "labels": {
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone Number",
+      "dob": "Date of Birth",
+      "address": "Address"
+    },
+    "edit": "Edit",
+    "cancel": "Cancel",
+    "save": "Save",
+  "saving": "Saving...",
+  "saveSuccess": "Save successfully!",
+  "saveFailed": "Save failed!",
+  "surveyHistory": {
+      "title": "Survey History",
+      "questions": {
+        "q1": "1. What genre of food do you usually eat?",
+        "q2": "2. Choose your favorite tastes.",
+        "q3": "3. Are there any foods or tastes you dislike?",
+        "q4": "4. What is most important to you when eating?",
+        "q5": "5. Do you want to eat in a private room?",
+        "q6": "6. How many people usually eat together?"
+      },
+      "answers": {
+        "vegetarian": "Vegetarian",
+        "warm": "Warm Dish",
+        "cold": "Cold Dish",
+        "sweet": "Sweet",
+        "salty": "Salty",
+        "spicy": "Spicy",
+        "dog": "Dog Meat",
+        "cat": "Cat Meat",
+        "taste": "Taste",
+        "price": "Price",
+        "health": "Health",
+        "private": "Yes, private room",
+        "open": "No, open space",
+        "any": "Either is fine",
+        "people1": "1 person",
+        "people2": "2 people",
+        "people34": "3-4 people"
+      },
+      "delete": "Delete",
+      "viewRecommendation": "View Recommendation",
+      "loading": "Loading saved surveys...",
+      "none": "None",
+      "defaultName": "Saved survey"
+    }
+  },
+  "deliveryPlatforms": {
+    "leftText1": "Highly Rated",
+    "leftText2": "Vietnamese Restaurants"
+  },
+  "footer": {
+    "text": "Connecting Japan and Vietnam through food.",
+    "members": {
+      "mssv": "Student ID",
+      "name": "Name",
+      "membernum1": "20225919",
+      "membername1": "Lê Thái Sơn",
+      "membernum2": "20225866",
+      "membername2": "Nguyễn Quốc Khánh",
+      "membernum3": "20225110",
+      "membername3": "Vũ Thị Quỳnh Như",
+      "membernum4": "20225859",
+      "membername4": "Trần Doãn Huy",
+      "membernum5": "20225816",
+      "membername5": "Nguyễn Đức Đại Dương",
+      "membernum6": "20225840",
+      "membername6": "Phạm Long Khánh",
+      "membernum7": "20225803",
+      "membername7": "Cao Thành Đạt"
+    },
+    "foodImage": {
+      "title": "See more dishes"
+    }
+  },
+  "survey": {
+    "title": "Taste Survey",
+    "target": "Who is this survey for?",
+    "targetPlaceholder": "Name (e.g. Mr. A)",
+    "q1": "1. What genre of food do you usually eat?",
+    "q2": "2. Choose your favorite tastes.",
+    "q3": "3. Are there any foods or tastes you dislike?",
+    "q4": "4. What is most important to you when eating?",
+    "q5": "5. Do you want to eat in a private room?",
+    "q6": "6. How many people usually eat together?",
+    "options": {
+      "vegetarian": "Vegetarian",
+      "warm": "Warm Dish",
+      "cold": "Cold Dish",
+      "noodle": "Soup/Noodle",
+      "other": "Other",
+      "sweet": "Sweet",
+      "sour": "Sour",
+      "salty": "Salty",
+      "bitter": "Bitter",
+      "umami": "Umami",
+      "spicy": "Spicy",
+      "dog": "Dog meat",
+      "blood": "Blood pudding",
+      "frog": "Frog",
+      "buffalo": "Buffalo",
+      "snake": "Snake",
+      "organs": "Organs/Liver",
+      "taste": "Taste",
+      "nutrition": "Nutrition",
+      "price": "Price",
+      "looks": "Appearance",
+      "health": "Health",
+      "quantity": "Quantity",
+      "privateYes": "Yes, private room",
+      "privateNo": "No, open space",
+      "privateAny": "Either is fine",
+      "people1": "1 person",
+      "people2": "2 people",
+      "people34": "3-4 people",
+      "people56": "5-6 people",
+      "people7": "7+ people"
+    },
+    "freeText": "Free text",
+    "save": "Save",
+    "search": "Search Food"
+  },
+  "helpfulpage":{
+    "sectionTitle":"Vietnamese Cuisine Guide"
+  }
+}
