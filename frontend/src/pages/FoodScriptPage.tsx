@@ -25,11 +25,23 @@ const FoodScriptPage: React.FC = () => {
       const food = await getFoodById(id);
       setDishName(food.name);
       const aiData = await generateDishScript(food.name);
+      console.log("AI Data received:", aiData);
+      console.log("Messages:", aiData?.messages);
+      console.log("Vocabulary:", aiData?.vocabulary);
+      console.log("Grammar:", aiData?.grammar);
       setScript(aiData);
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
       setScript(null);
-      setError(t("ScriptLoading.error") || 'Failed to load script');
+      
+      // Handle rate limit error specifically
+      if (err.response?.status === 429) {
+        setError("⚠️ APIリクエスト制限に達しました。1分後にもう一度お試しください。\n(Đã vượt quá giới hạn request API. Vui lòng thử lại sau 1 phút)");
+      } else if (err.response?.data?.message) {
+        setError(err.response.data.message);
+      } else {
+        setError(t("ScriptLoading.error") || 'Failed to load script');
+      }
     } finally {
       setLoading(false);
     }
@@ -44,13 +56,13 @@ const FoodScriptPage: React.FC = () => {
 
   if (error)
     return (
-      <div className="p-10 text-center">
-        <p className="text-red-600 mb-4">{error}</p>
+      <div className="p-10 text-center max-w-2xl mx-auto">
+        <p className="text-red-600 mb-4 whitespace-pre-line">{error}</p>
         <button
           onClick={() => loadData()}
           className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 transition"
         >
-          {t('common.retry') || 'Retry'}
+          {t('common.retry') || 'もう一度試す (Retry)'}
         </button>
       </div>
     );
@@ -72,39 +84,82 @@ const FoodScriptPage: React.FC = () => {
 
             <h1 className="flex-1 text-2xl sm:text-4xl font-extrabold text-center tracking-tight">
               <span className="text-gray-700 text-3xl mt-1">{dishName + " "}</span>
-              <span className="text-gray-700 text-3xl mt-1">{t("ScriptTitle.title")}</span>
+              <span className="text-gray-700 text-3xl mt-1">の会話レッスン</span>
             </h1>
         </div>
 
-        {/* SCRIPT HIỂN THỊ THEO FORMAT */}
-        <div className="bg-[#FDE8E8] border border-[#F5CACA] rounded-xl p-8 leading-relaxed text-gray-800 space-y-8 shadow-lg">
-
-          <section>
-            <h2 className="text-lg sm:text-xl font-bold text-red-600 mb-2">1. 導入</h2>
-            <p className="text-sm sm:text-base whitespace-pre-line">{script?.introduction}</p>
-          </section>
-
-          <section>
-            <h2 className="text-lg sm:text-xl font-bold text-red-600 mb-2">2. フォーの歴史と背景</h2>
-            <p className="text-sm sm:text-base whitespace-pre-line">{script?.history_background}</p>
-          </section>
-
-          <section>
-            <h2 className="text-lg sm:text-xl font-bold text-red-600 mb-2">3. 主な構成要素と特徴</h2>
-            <p className="text-sm sm:text-base whitespace-pre-line">{script?.components_features}</p>
-          </section>
-
-          <section>
-            <h2 className="text-lg sm:text-xl font-bold text-red-600 mb-2">4. 日本料理との比較による理解</h2>
-            <p className="text-sm sm:text-base whitespace-pre-line">{script?.comparison_with_japanese}</p>
-          </section>
-
-          <section>
-            <h2 className="text-lg sm:text-xl font-bold text-red-600 mb-2">5. 食事へのお誘い</h2>
-            <p className="text-sm sm:text-base whitespace-pre-line">{script?.invitation}</p>
-          </section>
-
+        {/* CHAT CONVERSATION */}
+        <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-lg mb-6">
+          {!script?.messages || script.messages.length === 0 ? (
+            <div className="text-center text-gray-500 py-8">
+              <p>会話データがありません</p>
+              <p className="text-sm mt-2">もう一度試してください</p>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {script.messages.map((msg: any, idx: number) => (
+                <div
+                  key={idx}
+                  className={`flex ${msg.role === 'student' ? 'justify-start' : 'justify-start'} gap-3`}
+                >
+                  {/* Icon */}
+                  <div className="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center text-2xl">
+                    {msg.role === 'student' ? '🎓' : '👨‍🏫'}
+                  </div>
+                  
+                  {/* Message bubble */}
+                  <div
+                    className={`max-w-[70%] px-4 py-3 rounded-2xl ${
+                      msg.role === 'student'
+                        ? 'bg-gray-100 text-gray-800'
+                        : 'bg-purple-600 text-white'
+                    }`}
+                  >
+                    <div className="text-xs font-semibold mb-1 opacity-70">
+                      {msg.role === 'student' ? '留学生' : '日本人の先生'}
+                    </div>
+                    <p className="text-sm sm:text-base whitespace-pre-wrap">{msg.text}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
+
+        {/* VOCABULARY SECTION - Dropdown */}
+        <details className="bg-blue-50 border border-blue-200 rounded-xl p-6 shadow-lg mb-6">
+          <summary className="text-xl font-bold text-blue-700 cursor-pointer hover:text-blue-800">
+            📚 【TỪ VỰNG KHÓ】
+          </summary>
+          <div className="mt-4 space-y-3">
+            {script?.vocabulary?.map((vocab: any, idx: number) => (
+              <div key={idx} className="border-l-4 border-blue-400 pl-4 py-2">
+                <div className="font-bold text-lg text-gray-800">{vocab.word}</div>
+                <div className="text-sm text-gray-600">読み方: {vocab.reading}</div>
+                <div className="text-sm text-gray-700 mt-1">意味: {vocab.meaning}</div>
+              </div>
+            ))}
+          </div>
+        </details>
+
+        {/* GRAMMAR SECTION - Dropdown */}
+        <details className="bg-green-50 border border-green-200 rounded-xl p-6 shadow-lg">
+          <summary className="text-xl font-bold text-green-700 cursor-pointer hover:text-green-800">
+            ✏️ 【NGỮ PHÁP】
+          </summary>
+          <div className="mt-4 space-y-4">
+            {script?.grammar?.map((gram: any, idx: number) => (
+              <div key={idx} className="border-l-4 border-green-400 pl-4 py-2">
+                <div className="font-bold text-lg text-gray-800">{gram.pattern}</div>
+                <div className="text-sm text-gray-700 mt-1">{gram.explanation}</div>
+                <div className="text-sm text-purple-700 mt-2 italic">
+                  例: {gram.example}
+                </div>
+              </div>
+            ))}
+          </div>
+        </details>
+
       </div>
     </div>
   );
