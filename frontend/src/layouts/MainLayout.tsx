@@ -13,7 +13,7 @@ const MainLayout = () => {
         </main>
         <footer className="w-full border-t py-6">
           <div className="text-center text-sm text-muted-foreground">
-            © 2024 Betomeshi. All rights reserved.
+            © 2025 Betomeshi. All rights reserved.
           </div>
         </footer>
       </div>
@@ -22,4 +22,3 @@ const MainLayout = () => {
 };
 
 export default MainLayout;
-
