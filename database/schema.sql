@@ -49,13 +49,11 @@ CREATE TABLE regions (
 CREATE TABLE user_preferences (
     preference_id SERIAL PRIMARY KEY,
     user_id INTEGER NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
-    favorite_taste VARCHAR(255),
-    disliked_ingredients VARCHAR(255),
-    dietary_criteria VARCHAR(255),
     target_name VARCHAR(255),
-    priorities VARCHAR(255),
-    private_room VARCHAR(255),
-    group_size VARCHAR(255),
+    experience_level VARCHAR(50),
+    smell_tolerance VARCHAR(50),
+    taste_preference TEXT[],
+    allergies TEXT[],
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

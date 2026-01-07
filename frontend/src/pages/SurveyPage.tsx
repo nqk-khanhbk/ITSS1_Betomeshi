@@ -5,14 +5,14 @@ import { api } from '@/api/client';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from "@/context/AuthContext";
 import {
-  DISLIKED_INGREDIENT_OPTIONS,
-  GENRE_OPTIONS,
-  PRIORITY_OPTIONS,
-  TASTE_OPTIONS,
-  type DislikedIngredientOption,
-  type GenreOption,
-  type PriorityOption,
-  type TasteOption,
+  EXPERIENCE_OPTIONS,
+  SMELL_OPTIONS,
+  TASTE_PREFERENCE_OPTIONS,
+  ALLERGY_OPTIONS,
+  type ExperienceOption,
+  type SmellOption,
+  type TastePreferenceOption,
+  type AllergyOption,
 } from '@/types/preferences';
 
 function toggleCheckbox<T extends string>(
@@ -30,16 +30,14 @@ function toggleCheckbox<T extends string>(
 export default function SurveyPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { isLoggedIn, isLoading } = useAuth(); // authentication
+  const { isLoggedIn, isLoading } = useAuth();
 
+  // Form state matching preferenceModel.js
   const [targetName, setTargetName] = useState('');
-  const [genres, setGenres] = useState<GenreOption[]>([]);
-  const [tastes, setTastes] = useState<TasteOption[]>([]);
-  const [dislikes, setDislikes] = useState<DislikedIngredientOption[]>([]);
-  const [otherDislike, setOtherDislike] = useState('');
-  const [priorities, setPriorities] = useState<PriorityOption[]>([]);
-
-  // Removed PrivateRoom and GroupSize as per request
+  const [experienceLevel, setExperienceLevel] = useState<ExperienceOption | ''>('');
+  const [smellTolerance, setSmellTolerance] = useState<SmellOption | ''>('');
+  const [tastePreferences, setTastePreferences] = useState<TastePreferenceOption[]>([]);
+  const [allergies, setAllergies] = useState<AllergyOption[]>([]);
 
   useEffect(() => {
     if (!isLoading && !isLoggedIn) {
@@ -52,16 +50,16 @@ export default function SurveyPage() {
   }
 
   if (!isLoggedIn) {
-    return null; // Will redirect via useEffect
+    return null;
   }
 
   const savePreferences = async (silent = false) => {
     const preferences = {
-      favorite_taste: tastes.join(','),
-      disliked_ingredients: dislikes.filter(Boolean).join(','),
-      dietary_criteria: genres.join(','),
       target_name: targetName.trim(),
-      priorities: priorities.join(','),
+      experience_level: experienceLevel,
+      smell_tolerance: smellTolerance,
+      taste_preference: tastePreferences,
+      allergies: allergies.filter(a => a !== 'none'), // Remove 'none' if other items selected
     };
 
     try {
@@ -80,40 +78,43 @@ export default function SurveyPage() {
   };
 
   const handleSave = async () => {
-    await savePreferences(false);
+    const success = await savePreferences(false);
+    if (success) {
+      navigate('/');
+    }
   };
 
   const handleSearch = async () => {
-    // Save survey data immediately
     await savePreferences(true);
 
-    // Map survey options to MenuPage filters (IDs)
-    // MenuPage IDs:
-    // Types: 1:Noodle, 2:Rice, 3:Bread, 4:Side, 5:Salad, 6:Hotpot
-    // Flavors: 1:Sour, 2:Sweet, 3:Herb, 4:Light, 5:Spicy
-    // Ingredients: 1:Beef, 2:Pork, 3:Chicken, 4:Seafood, 5:Vegetable
-
-    const typeIds: number[] = [];
-    const flavorIds: number[] = [];
-    const ingredientIds: number[] = [];
-
-    // Map Genres
-    if (genres.includes('noodle')) typeIds.push(1);
-    // 'vegetarian' -> maybe Vegetable ingredient (5)? Let's map it safely.
-    if (genres.includes('vegetarian')) ingredientIds.push(5);
-
-    // Map Tastes
-    if (tastes.includes('sour')) flavorIds.push(1);
-    if (tastes.includes('sweet')) flavorIds.push(2);
-    if (tastes.includes('spicy')) flavorIds.push(5);
-    // 'umami', 'salty', 'bitter' -> no direct mapping, ignored for now as strictly requested
-
-    // Map Dislikes (MenuPage doesn't support exclusion filters yet via URL easily, or logic differs)
-
+    // Build filter params based on preferences for the filter-by-preference API
     const params = new URLSearchParams();
-    if (typeIds.length > 0) params.set('types', typeIds.join(','));
-    if (flavorIds.length > 0) params.set('flavors', flavorIds.join(','));
-    if (ingredientIds.length > 0) params.set('ingredients', ingredientIds.join(','));
+
+    // Required: target_name for filtering
+    if (targetName.trim()) {
+      params.set('target_name', targetName.trim());
+    } else {
+      params.set('target_name', 'default');
+    }
+
+    // Map taste preferences to japanese_similar for backend filtering
+    if (tastePreferences.length > 0) {
+      params.set('japanese_similar', tastePreferences.join(','));
+    }
+
+    // Pass experience level for filtering logic
+    if (experienceLevel) params.set('experience', experienceLevel);
+
+    // Pass smell tolerance for filtering logic
+    if (smellTolerance) params.set('smell', smellTolerance);
+
+    // Pass allergies to exclude foods
+    if (allergies.length > 0 && !allergies.includes('none')) {
+      params.set('allergies', allergies.join(','));
+    }
+
+    // Use filter mode to tell MenuPage to use preference-based filtering
+    params.set('filter_mode', 'preference');
 
     navigate(`/foods?${params.toString()}`);
   };
@@ -147,17 +148,18 @@ export default function SurveyPage() {
 
           <div className="space-y-8">
 
-            {/* Q1 Genres */}
+            {/* Q1: Experience Level */}
             <div>
               <p className="font-semibold text-gray-800 mb-3">{t('survey.q1')}</p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                {GENRE_OPTIONS.map(opt => (
+              <div className="grid grid-cols-1 gap-3">
+                {EXPERIENCE_OPTIONS.map(opt => (
                   <label key={opt} className="flex items-center gap-2 cursor-pointer hover:bg-gray-50 p-2 rounded transition">
                     <input
-                      type="checkbox"
-                      className="w-5 h-5 accent-[#ad343e] rounded"
-                      checked={genres.includes(opt)}
-                      onChange={() => toggleCheckbox(opt, genres, setGenres)}
+                      type="radio"
+                      name="experience"
+                      className="w-5 h-5 accent-[#ad343e]"
+                      checked={experienceLevel === opt}
+                      onChange={() => setExperienceLevel(opt)}
                     />
                     <span className="text-gray-700">{t(`survey.options.${opt}`)}</span>
                   </label>
@@ -165,17 +167,18 @@ export default function SurveyPage() {
               </div>
             </div>
 
-            {/* Q2 Tastes */}
+            {/* Q2: Smell Tolerance */}
             <div>
               <p className="font-semibold text-gray-800 mb-3">{t('survey.q2')}</p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                {TASTE_OPTIONS.map(opt => (
+              <div className="grid grid-cols-1 gap-3">
+                {SMELL_OPTIONS.map(opt => (
                   <label key={opt} className="flex items-center gap-2 cursor-pointer hover:bg-gray-50 p-2 rounded transition">
                     <input
-                      type="checkbox"
-                      className="w-5 h-5 accent-[#ad343e] rounded"
-                      checked={tastes.includes(opt)}
-                      onChange={() => toggleCheckbox(opt, tastes, setTastes)}
+                      type="radio"
+                      name="smell"
+                      className="w-5 h-5 accent-[#ad343e]"
+                      checked={smellTolerance === opt}
+                      onChange={() => setSmellTolerance(opt)}
                     />
                     <span className="text-gray-700">{t(`survey.options.${opt}`)}</span>
                   </label>
@@ -183,42 +186,48 @@ export default function SurveyPage() {
               </div>
             </div>
 
-            {/* Q3 Dislikes */}
+            {/* Q3: Taste Preference (Japanese food comparison) */}
             <div>
               <p className="font-semibold text-gray-800 mb-3">{t('survey.q3')}</p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
-                {DISLIKED_INGREDIENT_OPTIONS.map(opt => (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {TASTE_PREFERENCE_OPTIONS.map(opt => (
                   <label key={opt} className="flex items-center gap-2 cursor-pointer hover:bg-gray-50 p-2 rounded transition">
                     <input
                       type="checkbox"
                       className="w-5 h-5 accent-[#ad343e] rounded"
-                      checked={dislikes.includes(opt)}
-                      onChange={() => toggleCheckbox(opt, dislikes, setDislikes)}
+                      checked={tastePreferences.includes(opt)}
+                      onChange={() => toggleCheckbox(opt, tastePreferences, setTastePreferences)}
                     />
                     <span className="text-gray-700">{t(`survey.options.${opt}`)}</span>
                   </label>
                 ))}
               </div>
-              <input
-                type="text"
-                placeholder={t('survey.freeText')}
-                value={otherDislike}
-                onChange={(e) => setOtherDislike(e.target.value)}
-                className="w-full sm:w-1/2 border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-[#ad343e]/50"
-              />
             </div>
 
-            {/* Q4 Priorities */}
+            {/* Q4: Allergies */}
             <div>
               <p className="font-semibold text-gray-800 mb-3">{t('survey.q4')}</p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                {PRIORITY_OPTIONS.map(opt => (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {ALLERGY_OPTIONS.map(opt => (
                   <label key={opt} className="flex items-center gap-2 cursor-pointer hover:bg-gray-50 p-2 rounded transition">
                     <input
                       type="checkbox"
                       className="w-5 h-5 accent-[#ad343e] rounded"
-                      checked={priorities.includes(opt)}
-                      onChange={() => toggleCheckbox(opt, priorities, setPriorities)}
+                      checked={allergies.includes(opt)}
+                      onChange={() => {
+                        if (opt === 'none') {
+                          // If clicking "none", clear all others
+                          setAllergies(allergies.includes('none') ? [] : ['none']);
+                        } else {
+                          // If clicking another option, remove "none"
+                          const withoutNone = allergies.filter(a => a !== 'none');
+                          if (withoutNone.includes(opt)) {
+                            setAllergies(withoutNone.filter(a => a !== opt));
+                          } else {
+                            setAllergies([...withoutNone, opt]);
+                          }
+                        }
+                      }}
                     />
                     <span className="text-gray-700">{t(`survey.options.${opt}`)}</span>
                   </label>
@@ -226,8 +235,6 @@ export default function SurveyPage() {
               </div>
               <div className="border-b border-gray-200 mt-8"></div>
             </div>
-
-            {/* Removed Private Room and Group Size */}
 
           </div>
 

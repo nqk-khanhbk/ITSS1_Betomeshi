@@ -1,4 +1,5 @@
 const FoodModel = require('../models/foodModel');
+const preferenceModel = require('../models/preferenceModel');
 const db = require('../db');
 
 function buildHttpError(status, message) {
@@ -309,7 +310,59 @@ module.exports = {
   addFoodImage,
   deleteFoodImage,
   addReview,
+  filterFoodsByPreference,
 };
+
+/**
+ * Filter foods based on user preferences
+ * @param {number} userId - User ID
+ * @param {string} targetName - Target name from preference (e.g., 'myself', 'friend')
+ * @param {object} additionalFilters - Additional filter params from query
+ * @returns {Promise<Array>} - Filtered foods
+ */
+async function filterFoodsByPreference(userId, targetName, additionalFilters = {}) {
+  try {
+    // Get user preference
+    const preference = await preferenceModel.getByUserIdAndTarget(userId, targetName);
+    
+    // Build filters from preference (preference takes priority over additionalFilters)
+    const filters = {
+      lang: additionalFilters.lang || 'jp',
+      search: additionalFilters.search || '',
+      flavor_ids: additionalFilters.flavor_ids || [],
+      ingredient_ids: additionalFilters.ingredient_ids || [],
+      food_type_ids: additionalFilters.food_type_ids || [],
+    };
+
+    // Map preference fields to filter criteria
+    if (preference) {
+      // taste_preference -> taste_styles (filter by food.style field)
+      if (preference.taste_preference && Array.isArray(preference.taste_preference) && preference.taste_preference.length > 0) {
+        filters.taste_styles = preference.taste_preference;
+      }
+
+      // allergies -> exclude_ingredients (exclude foods with matching ingredients)
+      if (preference.allergies && Array.isArray(preference.allergies) && preference.allergies.length > 0) {
+        // Filter out 'none' value
+        const actualAllergies = preference.allergies.filter(a => a !== 'none');
+        if (actualAllergies.length > 0) {
+          filters.exclude_ingredients = actualAllergies;
+        }
+      }
+    }
+
+    // Add japanese_similar filter if provided
+    if (additionalFilters.japanese_similar) {
+      filters.japanese_similar = additionalFilters.japanese_similar;
+    }
+
+    const foods = await FoodModel.getAllFoods(filters);
+    return foods;
+  } catch (err) {
+    console.error('Error in filterFoodsByPreference:', err);
+    throw buildHttpError(500, `Error when filtering foods by preference: ${err.message}`);
+  }
+}
 
 async function addReview(foodIdParam, userId, rating, comment) {
   const foodId = Number.parseInt(foodIdParam, 10);

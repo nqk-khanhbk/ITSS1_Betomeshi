@@ -174,6 +174,57 @@ async function addReview(req, res, next) {
   }
 }
 
+/**
+ * Filter foods by user preferences
+ * GET /foods/filter-by-preference?target_name=myself&japanese_similar=うどん
+ */
+async function filterFoodsByPreference(req, res, next) {
+  try {
+    const userId = req.user ? req.user.userId : null;
+
+    if (!userId) {
+      const err = new Error('User not authenticated');
+      err.status = 401;
+      throw err;
+    }
+
+    const { target_name, japanese_similar, search, flavors, ingredients, types } = req.query;
+    const lang = (req.query.lang || (req.headers['accept-language'] || '').split(',')[0] || 'jp').slice(0, 2);
+
+    if (!target_name) {
+      const err = new Error('target_name is required');
+      err.status = 400;
+      throw err;
+    }
+
+    const additionalFilters = {
+      lang,
+      search: search || '',
+      flavor_ids: flavors ? flavors.split(',').map(Number) : [],
+      ingredient_ids: ingredients ? ingredients.split(',').map(Number) : [],
+      food_type_ids: types ? types.split(',').map(Number) : [],
+      japanese_similar: japanese_similar || '',
+    };
+
+    const foods = await FoodService.filterFoodsByPreference(userId, target_name, additionalFilters);
+
+    const makeAbsolute = (u) => {
+      if (!u) return u;
+      if (u.startsWith('http') || u.startsWith('data:')) return u;
+      return `${req.protocol}://${req.get('host')}${u}`;
+    };
+
+    const normalized = foods.map((f) => ({
+      ...f,
+      image_url: makeAbsolute(f.image_url),
+    }));
+
+    return res.json(normalized);
+  } catch (error) {
+    return next(error);
+  }
+}
+
 module.exports = {
   getFoodById,
   getPopularFoods,
@@ -185,6 +236,7 @@ module.exports = {
   uploadFoodImage,
   deleteFoodImage,
   addReview,
+  filterFoodsByPreference,
 };
 
 
