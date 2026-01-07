@@ -6,7 +6,8 @@
   "type": "commonjs",
   "scripts": {
     "start": "node src/server.js",
-    "dev": "nodemon src/server.js"
+    "dev": "nodemon src/server.js",
+    "vercel-build": "echo 'No build step required'"
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",

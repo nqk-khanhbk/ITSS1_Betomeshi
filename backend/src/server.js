@@ -6,4 +6,5 @@ app.listen(PORT, () => {
   console.log(`Food API server is running on port ${PORT}`);
 });
 
-
+// Export for Vercel serverless
+module.exports = app;
