@@ -7,7 +7,7 @@ const VALID_TASTE_PREFERENCES = [
   'udon', 'teriyaki', 'tempura', 'tsukemen', 'salad', 'takikomi', 'curry'
 ];
 const VALID_ALLERGIES = [
-  'none', 'shellfish', 'seafood', 'nuts', 'coriander',
+  'none', 'seafood', 'nuts', 'coriander',
   'egg', 'dairy', 'gluten', 'soy', 'alcohol'
 ];
 

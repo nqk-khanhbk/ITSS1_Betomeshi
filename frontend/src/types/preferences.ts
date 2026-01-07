@@ -14,7 +14,7 @@ export type TastePreferenceOption = (typeof TASTE_PREFERENCE_OPTIONS)[number];
 
 // ⑤ Allergies - アレルギー・苦手な食材 (multi select)
 export const ALLERGY_OPTIONS = [
-    "none", "shellfish", "seafood", "nuts", "coriander",
+    "none", "seafood", "nuts", "coriander",
     "egg", "dairy", "gluten", "soy", "alcohol"
 ] as const;
 export type AllergyOption = (typeof ALLERGY_OPTIONS)[number];

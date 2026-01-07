@@ -85,35 +85,20 @@ export default function SurveyPage() {
   };
 
   const handleSearch = async () => {
-    await savePreferences(true);
+    const success = await savePreferences(true);
+    
+    if (!success) {
+      alert(t('profilePage.saveFailed'));
+      return;
+    }
 
-    // Build filter params based on preferences for the filter-by-preference API
+    // Navigate to menu page with filter-by-preference mode
     const params = new URLSearchParams();
-
-    // Required: target_name for filtering
-    if (targetName.trim()) {
-      params.set('target_name', targetName.trim());
-    } else {
-      params.set('target_name', 'default');
-    }
-
-    // Map taste preferences to japanese_similar for backend filtering
-    if (tastePreferences.length > 0) {
-      params.set('japanese_similar', tastePreferences.join(','));
-    }
-
-    // Pass experience level for filtering logic
-    if (experienceLevel) params.set('experience', experienceLevel);
-
-    // Pass smell tolerance for filtering logic
-    if (smellTolerance) params.set('smell', smellTolerance);
-
-    // Pass allergies to exclude foods
-    if (allergies.length > 0 && !allergies.includes('none')) {
-      params.set('allergies', allergies.join(','));
-    }
-
-    // Use filter mode to tell MenuPage to use preference-based filtering
+    
+    // Required: target_name for filter-by-preference API
+    params.set('target_name', targetName.trim() || 'myself');
+    
+    // Set filter mode to tell MenuPage to use preference-based filtering
     params.set('filter_mode', 'preference');
 
     navigate(`/foods?${params.toString()}`);
