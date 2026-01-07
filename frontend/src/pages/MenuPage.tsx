@@ -149,25 +149,47 @@ export default function MenuPage() {
       const sFlavors = opts?.flavors !== undefined ? opts.flavors : selectedFilters.flavors;
       const sIngredients = opts?.ingredients !== undefined ? opts.ingredients : selectedFilters.ingredients;
 
-      if (sQuery.trim()) {
-        params.append('search', sQuery.trim());
+      // Check if we should use preference-based filtering
+      const filterMode = searchParams.get('filter_mode');
+      const targetName = searchParams.get('target_name');
+
+      if (filterMode === 'preference' && targetName) {
+        // Use preference-based filtering API
+        params.append('target_name', targetName);
+
+        const japaneseSimilar = searchParams.get('japanese_similar');
+        if (japaneseSimilar) params.append('japanese_similar', japaneseSimilar);
+
+        // Pass additional filters if any
+        if (sQuery.trim()) params.append('search', sQuery.trim());
+        if (sTypes.length > 0) params.append('types', sTypes.join(','));
+        if (sFlavors.length > 0) params.append('flavors', sFlavors.join(','));
+        if (sIngredients.length > 0) params.append('ingredients', sIngredients.join(','));
+
+        params.append('lang', i18n.language);
+
+        const response = await api.get(`/foods/filter-by-preference?${params.toString()}`);
+        setFoods(response.data);
+      } else {
+        // Use regular filtering API
+        if (sQuery.trim()) {
+          params.append('search', sQuery.trim());
+        }
+
+        if (sTypes.length > 0)
+          params.append('types', sTypes.join(','));
+
+        if (sFlavors.length > 0)
+          params.append('flavors', sFlavors.join(','));
+
+        if (sIngredients.length > 0)
+          params.append('ingredients', sIngredients.join(','));
+
+        params.append('lang', i18n.language);
+
+        const response = await api.get(`/foods?${params.toString()}`);
+        setFoods(response.data);
       }
-
-      if (sTypes.length > 0)
-        params.append('types', sTypes.join(','));
-
-      if (sFlavors.length > 0)
-        params.append('flavors', sFlavors.join(','));
-
-      if (sIngredients.length > 0)
-        params.append('ingredients', sIngredients.join(','));
-
-      params.append('lang', i18n.language);
-
-      const response = await api.get(`/foods?${params.toString()}`);
-
-      // Just set foods data, don't mix with favorites here
-      setFoods(response.data);
 
       if (opts?.page) setCurrentPage(opts.page);
 
@@ -180,7 +202,7 @@ export default function MenuPage() {
         setContentLoading(false);
       }
     }
-  }, [i18n.language]); // Removed isLoggedIn dependency as it's no longer needed for fetch
+  }, [i18n.language, searchParams]);
 
   const searchDidMountRef = useRef(false);
   useEffect(() => {

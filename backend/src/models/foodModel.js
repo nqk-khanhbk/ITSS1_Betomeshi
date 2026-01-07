@@ -266,6 +266,43 @@ async function getAllFoods(filters = {}) {
     paramIndex++;
   }
 
+  // Filter by taste styles (from user preferences)
+  // taste_styles is an array of style keywords like 'udon_style', 'teriyaki_style', etc.
+  if (filters.taste_styles?.length) {
+    const styleConditions = filters.taste_styles.map((style, idx) => {
+      params.push(`%${style}%`);
+      return `f.style ILIKE $${paramIndex + idx}`;
+    });
+    sql += ` AND (${styleConditions.join(' OR ')})`;
+    paramIndex += filters.taste_styles.length;
+  }
+
+  // Exclude foods with certain ingredients (for allergies)
+  // exclude_ingredients is an array of ingredient names to exclude
+  if (filters.exclude_ingredients?.length) {
+    sql += `
+      AND NOT EXISTS (
+        SELECT 1 FROM food_ingredients fi
+        JOIN ingredients i ON i.ingredient_id = fi.ingredient_id
+        WHERE fi.food_id = f.food_id
+          AND i.name ILIKE ANY($${paramIndex}::text[])
+      )
+    `;
+    params.push(filters.exclude_ingredients.map(ing => `%${ing}%`));
+    paramIndex++;
+  }
+
+  // Filter by Japanese similar food (search in comparison field)
+  if (filters.japanese_similar) {
+    if (lang === 'jp') {
+      sql += ` AND f.comparison ILIKE $${paramIndex}`;
+    } else {
+      sql += ` AND (f.comparison ILIKE $${paramIndex} OR ft.comparison ILIKE $${paramIndex})`;
+    }
+    params.push(`%${filters.japanese_similar}%`);
+    paramIndex++;
+  }
+
   sql += ` ORDER BY f.created_at DESC`;
 
   const result = await db.query(sql, params);

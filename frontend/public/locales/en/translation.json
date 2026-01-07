@@ -52,7 +52,7 @@
     "login": "Login",
     "signup": "Sign Up",
     "profile": "Profile",
-       "back_to_list": "Back to Restaurant List",
+    "back_to_list": "Back to Restaurant List",
     "favorites": "Favorites"
   },
   "common": {
@@ -334,8 +334,7 @@
       "no_reviews": "There is no review for this restaurant yet.",
       "not_found": "Restaurant not found",
       "fetch_error": "Can't fetch restaurant details. Please try again later.",
-      "n_a": "N/A"
-      ,
+      "n_a": "N/A",
       "reviews": "{{count}} reviews"
     }
   },
@@ -363,18 +362,16 @@
     "edit": "Edit",
     "cancel": "Cancel",
     "save": "Save",
-  "saving": "Saving...",
-  "saveSuccess": "Save successfully!",
-  "saveFailed": "Save failed!",
-  "surveyHistory": {
+    "saving": "Saving...",
+    "saveSuccess": "Save successfully!",
+    "saveFailed": "Save failed!",
+    "surveyHistory": {
       "title": "Survey History",
       "questions": {
-        "q1": "1. What genre of food do you usually eat?",
-        "q2": "2. Choose your favorite tastes.",
-        "q3": "3. Are there any foods or tastes you dislike?",
-        "q4": "4. What is most important to you when eating?",
-        "q5": "5. Do you want to eat in a private room?",
-        "q6": "6. How many people usually eat together?"
+        "q1": "① How familiar are you with Vietnamese cuisine?",
+        "q2": "② How much aroma can you handle?",
+        "q3": "③ Preferred taste type (Japanese food comparison)",
+        "q4": "④ Allergies & foods to avoid"
       },
       "answers": {
         "vegetarian": "Vegetarian",
@@ -434,50 +431,39 @@
     "title": "Taste Survey",
     "target": "Who is this survey for?",
     "targetPlaceholder": "Name (e.g. Mr. A)",
-    "q1": "1. What genre of food do you usually eat?",
-    "q2": "2. Choose your favorite tastes.",
-    "q3": "3. Are there any foods or tastes you dislike?",
-    "q4": "4. What is most important to you when eating?",
-    "q5": "5. Do you want to eat in a private room?",
-    "q6": "6. How many people usually eat together?",
+    "q1": "① How familiar are you with Vietnamese cuisine?",
+    "q2": "② How much \"aroma\" can you handle in food?",
+    "q3": "③ What taste do you prefer? (Compare to Japanese food)",
+    "q4": "④ Do you have any allergies or foods to avoid?",
     "options": {
-      "vegetarian": "Vegetarian",
-      "warm": "Warm Dish",
-      "cold": "Cold Dish",
-      "noodle": "Soup/Noodle",
-      "other": "Other",
-      "sweet": "Sweet",
-      "sour": "Sour",
-      "salty": "Salty",
-      "bitter": "Bitter",
-      "umami": "Umami",
-      "spicy": "Spicy",
-      "dog": "Dog meat",
-      "blood": "Blood pudding",
-      "frog": "Frog",
-      "buffalo": "Buffalo",
-      "snake": "Snake",
-      "organs": "Organs/Liver",
-      "taste": "Taste",
-      "nutrition": "Nutrition",
-      "price": "Price",
-      "looks": "Appearance",
-      "health": "Health",
-      "quantity": "Quantity",
-      "privateYes": "Yes, private room",
-      "privateNo": "No, open space",
-      "privateAny": "Either is fine",
-      "people1": "1 person",
-      "people2": "2 people",
-      "people34": "3-4 people",
-      "people56": "5-6 people",
-      "people7": "7+ people"
+      "first_time": "First time trying Vietnamese food",
+      "not_familiar": "Tried before but not very familiar",
+      "frequent": "I eat it often (Love it!)",
+      "no_smell": "Prefer dishes with almost no smell",
+      "mild_ok": "Light aroma (coriander/fish sauce) is OK",
+      "strong_ok": "Love authentic strong aromas!",
+      "udon": "【Udon style】Light dashi soup",
+      "teriyaki": "【Teriyaki style】Sweet-salty rich flavor",
+      "tempura": "【Tempura style】Crispy fried",
+      "tsukemen": "【Tsukemen style】Dipping noodles",
+      "salad": "【Salad style】Healthy and tangy",
+      "takikomi": "【Takikomi Gohan style】Savory rice",
+      "curry": "【Curry style】Spicy kick",
+      "none": "None",
+      "shellfish": "Shrimp/Crab (Crustaceans)",
+      "seafood": "Seafood in general",
+      "nuts": "Peanuts/Nuts",
+      "coriander": "Coriander (Cilantro)",
+      "egg": "Eggs",
+      "dairy": "Dairy products",
+      "gluten": "Wheat (Gluten)",
+      "soy": "Soy",
+      "alcohol": "Alcohol"
     },
-    "freeText": "Free text",
     "save": "Save",
     "search": "Search Food"
   },
-  "helpfulpage":{
-    "sectionTitle":"Vietnamese Cuisine Guide"
+  "helpfulpage": {
+    "sectionTitle": "Vietnamese Cuisine Guide"
   }
 }

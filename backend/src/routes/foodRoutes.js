@@ -26,6 +26,10 @@ router.get('/filters', FoodController.getFilterOptions);
 // GET /foods -> returns all foods with primary image
 router.get('/foods', FoodController.getAllFoods);
 
+// GET /foods/filter-by-preference -> filter foods by user preferences (authenticated)
+// Must be before /foods/:id to avoid path conflict
+router.get('/foods/filter-by-preference', authenticateToken, FoodController.filterFoodsByPreference);
+
 // GET /foods/:id -> returns food detail with images & reviews
 router.get('/foods/:id', FoodController.getFoodById);
 

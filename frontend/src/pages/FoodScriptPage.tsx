@@ -33,7 +33,7 @@ const FoodScriptPage: React.FC = () => {
     } catch (err: any) {
       console.error(err);
       setScript(null);
-      
+
       // Handle rate limit error specifically
       if (err.response?.status === 429) {
         setError("⚠️ APIリクエスト制限に達しました。1分後にもう一度お試しください。\n(Đã vượt quá giới hạn request API. Vui lòng thử lại sau 1 phút)");
@@ -73,19 +73,19 @@ const FoodScriptPage: React.FC = () => {
       <div className="max-w-4xl mx-auto relative">
         {/*Header*/}
         <div className="flex items-center gap-4 mb-6">
-        {/* Back button (purple square) */}
-            <button
-              onClick={() => navigate(-1)}
-              className="bg-purple-700 hover:bg-purple-800 text-white w-10 h-10 rounded-lg flex items-center justify-center shadow-md focus:outline-none"
-              aria-label="Back"
-            >
-              <ChevronLeft size={20} className="text-white text-bold" />
-            </button>
+          {/* Back button (purple square) */}
+          <button
+            onClick={() => navigate(-1)}
+            className="bg-purple-700 hover:bg-purple-800 text-white w-10 h-10 rounded-lg flex items-center justify-center shadow-md focus:outline-none"
+            aria-label="Back"
+          >
+            <ChevronLeft size={20} className="text-white text-bold" />
+          </button>
 
-            <h1 className="flex-1 text-2xl sm:text-4xl font-extrabold text-center tracking-tight">
-              <span className="text-gray-700 text-3xl mt-1">{dishName + " "}</span>
-              <span className="text-gray-700 text-3xl mt-1">の会話レッスン</span>
-            </h1>
+          <h1 className="flex-1 text-2xl sm:text-4xl font-extrabold text-center tracking-tight">
+            <span className="text-gray-700 text-3xl mt-1">{dishName + " "}</span>
+            <span className="text-gray-700 text-3xl mt-1">の会話レッスン</span>
+          </h1>
         </div>
 
         {/* CHAT CONVERSATION */}
@@ -106,14 +106,13 @@ const FoodScriptPage: React.FC = () => {
                   <div className="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center text-2xl">
                     {msg.role === 'student' ? '🎓' : '👨‍🏫'}
                   </div>
-                  
+
                   {/* Message bubble */}
                   <div
-                    className={`max-w-[70%] px-4 py-3 rounded-2xl ${
-                      msg.role === 'student'
-                        ? 'bg-gray-100 text-gray-800'
-                        : 'bg-purple-600 text-white'
-                    }`}
+                    className={`max-w-[70%] px-4 py-3 rounded-2xl ${msg.role === 'student'
+                      ? 'bg-gray-100 text-gray-800'
+                      : 'bg-purple-600 text-white'
+                      }`}
                   >
                     <div className="text-xs font-semibold mb-1 opacity-70">
                       {msg.role === 'student' ? '留学生' : '日本人の先生'}
@@ -129,7 +128,7 @@ const FoodScriptPage: React.FC = () => {
         {/* VOCABULARY SECTION - Dropdown */}
         <details className="bg-blue-50 border border-blue-200 rounded-xl p-6 shadow-lg mb-6">
           <summary className="text-xl font-bold text-blue-700 cursor-pointer hover:text-blue-800">
-            📚 【TỪ VỰNG KHÓ】
+            📚 【難しい語彙】
           </summary>
           <div className="mt-4 space-y-3">
             {script?.vocabulary?.map((vocab: any, idx: number) => (
@@ -145,7 +144,7 @@ const FoodScriptPage: React.FC = () => {
         {/* GRAMMAR SECTION - Dropdown */}
         <details className="bg-green-50 border border-green-200 rounded-xl p-6 shadow-lg">
           <summary className="text-xl font-bold text-green-700 cursor-pointer hover:text-green-800">
-            ✏️ 【NGỮ PHÁP】
+            ✏️ 【文法】
           </summary>
           <div className="mt-4 space-y-4">
             {script?.grammar?.map((gram: any, idx: number) => (

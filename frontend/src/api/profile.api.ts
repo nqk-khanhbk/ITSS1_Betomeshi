@@ -1,19 +1,15 @@
 import { api } from "./client";
 import type { User } from "./auth.api";
 import {
-    DISLIKED_INGREDIENT_OPTIONS,
-    GROUP_SIZE_OPTIONS,
-    GENRE_OPTIONS,
-    PRIVATE_ROOM_OPTIONS,
-    PRIORITY_OPTIONS,
-    TASTE_OPTIONS,
-    type DislikedIngredientOption,
-    type GenreOption,
-    type GroupSizeOption,
+    EXPERIENCE_OPTIONS,
+    SMELL_OPTIONS,
+    TASTE_PREFERENCE_OPTIONS,
+    ALLERGY_OPTIONS,
+    type ExperienceOption,
+    type SmellOption,
+    type TastePreferenceOption,
+    type AllergyOption,
     type PreferenceData,
-    type PriorityOption,
-    type PrivateRoomOption,
-    type TasteOption,
 } from "@/types/preferences";
 
 interface UpdateProfileData {
@@ -25,13 +21,11 @@ interface UpdateProfileData {
 }
 
 interface PreferenceResponse {
-    favorite_taste?: string;
-    disliked_ingredients?: string;
-    dietary_criteria?: string;
     target_name?: string;
-    priorities?: string;
-    private_room?: string;
-    group_size?: string;
+    experience_level?: string;
+    smell_tolerance?: string;
+    taste_preference?: string[] | string;
+    allergies?: string[] | string;
     updated_at?: string;
     [key: string]: unknown;
 }
@@ -40,11 +34,17 @@ function isEnumValue<T extends string>(value: string, allowed: readonly T[]): va
     return allowed.includes(value as T);
 }
 
-function parseEnumArray<T extends string>(value: string | undefined, allowed: readonly T[]): T[] {
+function parseEnumArray<T extends string>(value: string[] | string | undefined, allowed: readonly T[]): T[] {
     if (!value) {
         return [];
     }
 
+    // Handle if value is already an array
+    if (Array.isArray(value)) {
+        return value.filter((item): item is T => isEnumValue(item, allowed));
+    }
+
+    // Handle if value is a comma-separated string
     return value
         .split(",")
         .map((item) => item.trim())
@@ -63,16 +63,14 @@ export const updateProfile = async (data: UpdateProfileData): Promise<{ message:
 export const getPreferences = async (): Promise<PreferenceData[]> => {
     const response = await api.get<PreferenceResponse[]>("/preferences");
     return response.data.map((prefs) => {
-        const { favorite_taste, disliked_ingredients, dietary_criteria, priorities, private_room, group_size, ...rest } = prefs;
+        const { experience_level, smell_tolerance, taste_preference, allergies, ...rest } = prefs;
 
         return {
             ...rest,
-            favorite_taste: parseEnumArray(favorite_taste, TASTE_OPTIONS),
-            disliked_ingredients: parseEnumArray(disliked_ingredients, DISLIKED_INGREDIENT_OPTIONS),
-            dietary_criteria: parseEnumArray(dietary_criteria, GENRE_OPTIONS),
-            priorities: parseEnumArray(priorities, PRIORITY_OPTIONS),
-            private_room: parseEnumValue(private_room, PRIVATE_ROOM_OPTIONS),
-            group_size: parseEnumValue(group_size, GROUP_SIZE_OPTIONS),
+            experience_level: parseEnumValue(experience_level, EXPERIENCE_OPTIONS),
+            smell_tolerance: parseEnumValue(smell_tolerance, SMELL_OPTIONS),
+            taste_preference: parseEnumArray(taste_preference, TASTE_PREFERENCE_OPTIONS),
+            allergies: parseEnumArray(allergies, ALLERGY_OPTIONS),
         };
     });
 };

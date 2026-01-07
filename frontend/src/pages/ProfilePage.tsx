@@ -54,12 +54,10 @@ const ProfilePage = () => {
 
         const buildHistoryEntry = (prefs: PreferenceData) => ({
             name: prefs.target_name || t("profilePage.surveyHistory.defaultName"),
-            q1: prefs.dietary_criteria ?? [],
-            q2: prefs.favorite_taste ?? [],
-            q3: prefs.disliked_ingredients ?? [],
-            q4: prefs.priorities ?? [],
-            q5: prefs.private_room ? [prefs.private_room] : [],
-            q6: prefs.group_size ? [prefs.group_size] : [],
+            experience_level: prefs.experience_level || '',
+            smell_tolerance: prefs.smell_tolerance || '',
+            taste_preference: prefs.taste_preference ?? [],
+            allergies: prefs.allergies ?? [],
         });
 
         setHistoryLoading(true);
@@ -302,30 +300,24 @@ const ProfilePage = () => {
 const mockSurveyHistory = [
     {
         name: "木村 太郎 先生",
-        q1: ["vegetarian", "warm"],
-        q2: ["sweet", "salty"],
-        q3: ["dog"],
-        q4: ["taste", "health"],
-        q5: ["private"],
-        q6: ["people1"]
+        experience_level: "first_time",
+        smell_tolerance: "no_smell",
+        taste_preference: ["udon", "salad"],
+        allergies: ["shellfish", "coriander"]
     },
     {
         name: "田中 次郎 先輩",
-        q1: ["cold"],
-        q2: ["spicy"],
-        q3: [],
-        q4: ["price"],
-        q5: ["open"],
-        q6: ["people34"]
+        experience_level: "not_familiar",
+        smell_tolerance: "mild_ok",
+        taste_preference: ["teriyaki", "curry"],
+        allergies: ["none"]
     },
     {
         name: "高橋 一郎 先生",
-        q1: ["warm"],
-        q2: ["sweet"],
-        q3: ["cat"],
-        q4: ["taste"],
-        q5: ["any"],
-        q6: ["people2"]
+        experience_level: "frequent",
+        smell_tolerance: "strong_ok",
+        taste_preference: ["tempura", "tsukemen"],
+        allergies: ["seafood", "nuts"]
     }
 ];
 
@@ -342,19 +334,35 @@ const SurveyHistoryItem = ({ survey, t }: { survey: any, t: any }) => {
         }
     };
 
-    const handleViewRecommendation = async () => {
-        // Dynamically import to avoid circular dependencies if any, though here it's fine.
-        // Better to just import at top level, but for localized change:
-        const { mapSurveyToFilters } = await import('../utils/surveyMapping');
-
-        const filters = mapSurveyToFilters(survey);
+    const handleViewRecommendation = () => {
         const params = new URLSearchParams();
 
-        if (filters.types.length > 0) params.append('types', filters.types.join(','));
-        if (filters.flavors.length > 0) params.append('flavors', filters.flavors.join(','));
-        if (filters.ingredients.length > 0) params.append('ingredients', filters.ingredients.join(','));
+        // Required: target_name for filtering
+        params.set('target_name', survey.name || 'default');
 
-        console.log("View recommendation for", survey.name, params.toString());
+        // Map taste preferences to japanese_similar for backend filtering
+        if (survey.taste_preference && survey.taste_preference.length > 0) {
+            params.set('japanese_similar', survey.taste_preference.join(','));
+        }
+
+        // Pass experience level for filtering logic
+        if (survey.experience_level) {
+            params.set('experience', survey.experience_level);
+        }
+
+        // Pass smell tolerance for filtering logic
+        if (survey.smell_tolerance) {
+            params.set('smell', survey.smell_tolerance);
+        }
+
+        // Pass allergies to exclude foods
+        if (survey.allergies && survey.allergies.length > 0 && !survey.allergies.includes('none')) {
+            params.set('allergies', survey.allergies.join(','));
+        }
+
+        // Use filter mode to tell MenuPage to use preference-based filtering
+        params.set('filter_mode', 'preference');
+
         navigate(`/foods?${params.toString()}`);
     };
 
@@ -412,52 +420,48 @@ const SurveyHistoryItem = ({ survey, t }: { survey: any, t: any }) => {
             >
                 <div className="p-8 bg-gray-50 border-t border-gray-200">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-8">
-                        {/* Q1 */}
+                        {/* Experience Level */}
                         <div>
                             <p className="font-semibold text-gray-800 mb-2">{t("profilePage.surveyHistory.questions.q1")}</p>
-                        <div className="flex flex-wrap gap-2">
-                            {renderAnswerChips(survey.q1)}
-                        </div>
-                        </div>
-
-                        {/* Q4 */}
-                        <div>
-                            <p className="font-semibold text-gray-800 mb-2">{t("profilePage.surveyHistory.questions.q4")}</p>
-                        <div className="flex flex-wrap gap-2">
-                            {renderAnswerChips(survey.q4)}
-                        </div>
-                        </div>
-
-                        {/* Q2 */}
-                        <div>
-                            <p className="font-semibold text-gray-800 mb-2">{t("profilePage.surveyHistory.questions.q2")}</p>
-                        <div className="flex flex-wrap gap-2">
-                            {renderAnswerChips(survey.q2)}
-                        </div>
-                        </div>
-
-                        {/* Q5 */}
-                        <div>
-                            <p className="font-semibold text-gray-800 mb-2">{t("profilePage.surveyHistory.questions.q5")}</p>
-                        <div className="flex flex-wrap gap-2">
-                            {renderAnswerChips(survey.q5)}
-                        </div>
-                        </div>
-
-                        {/* Q3 */}
-                        <div>
-                            <p className="font-semibold text-gray-800 mb-2">{t("profilePage.surveyHistory.questions.q3")}</p>
                             <div className="flex flex-wrap gap-2">
-                                {renderAnswerChips(survey.q3, t("profilePage.surveyHistory.none"))}
+                                {survey.experience_level ? (
+                                    <span className="bg-gray-200 text-gray-700 px-3 py-1 rounded-md text-sm">
+                                        {translateAnswer(survey.experience_level)}
+                                    </span>
+                                ) : (
+                                    <p className="text-gray-500 text-sm">{t("profilePage.surveyHistory.none")}</p>
+                                )}
                             </div>
                         </div>
 
-                        {/* Q6 */}
+                        {/* Smell Tolerance */}
                         <div>
-                            <p className="font-semibold text-gray-800 mb-2">{t("profilePage.surveyHistory.questions.q6")}</p>
-                        <div className="flex flex-wrap gap-2">
-                            {renderAnswerChips(survey.q6)}
+                            <p className="font-semibold text-gray-800 mb-2">{t("profilePage.surveyHistory.questions.q2")}</p>
+                            <div className="flex flex-wrap gap-2">
+                                {survey.smell_tolerance ? (
+                                    <span className="bg-gray-200 text-gray-700 px-3 py-1 rounded-md text-sm">
+                                        {translateAnswer(survey.smell_tolerance)}
+                                    </span>
+                                ) : (
+                                    <p className="text-gray-500 text-sm">{t("profilePage.surveyHistory.none")}</p>
+                                )}
+                            </div>
                         </div>
+
+                        {/* Taste Preference */}
+                        <div>
+                            <p className="font-semibold text-gray-800 mb-2">{t("profilePage.surveyHistory.questions.q3")}</p>
+                            <div className="flex flex-wrap gap-2">
+                                {renderAnswerChips(survey.taste_preference || [], t("profilePage.surveyHistory.none"))}
+                            </div>
+                        </div>
+
+                        {/* Allergies */}
+                        <div>
+                            <p className="font-semibold text-gray-800 mb-2">{t("profilePage.surveyHistory.questions.q4")}</p>
+                            <div className="flex flex-wrap gap-2">
+                                {renderAnswerChips(survey.allergies || [], t("profilePage.surveyHistory.none"))}
+                            </div>
                         </div>
                     </div>
 
