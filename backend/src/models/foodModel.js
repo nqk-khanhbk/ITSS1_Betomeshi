@@ -1,13 +1,14 @@
-const db = require('../db');
+const db = require("../db");
 /**
  * Fetch a food along with its images and reviews.
  * Keeps queries simple and easy to maintain.
  * @param {number} foodId
  * @returns {Promise<{food: object|null, images: string[], reviews: object[]}>}
  */
-async function getPopularFoods(limit = "4", lang = 'jp') {
-  if (lang == 'jp') {
-    const result = await db.query(`
+async function getPopularFoods(limit = "4", lang = "jp") {
+  if (lang == "jp") {
+    const result = await db.query(
+      `
     SELECT
       f.food_id,
       f.name,
@@ -24,11 +25,14 @@ async function getPopularFoods(limit = "4", lang = 'jp') {
     FROM foods f
     ORDER BY f.rating DESC
     LIMIT $1
-  `, [limit]);
+  `,
+      [limit]
+    );
     return result.rows;
   }
 
-  const result = await db.query(`
+  const result = await db.query(
+    `
     SELECT 
       f.food_id,
       COALESCE(ft.name, f.name) AS name,
@@ -47,7 +51,9 @@ async function getPopularFoods(limit = "4", lang = 'jp') {
     LEFT JOIN food_translations ft ON ft.food_id = f.food_id AND ft.lang = $1
     ORDER BY f.rating DESC
     LIMIT $2
-  `, [lang, limit]);
+  `,
+    [lang, limit]
+  );
 
   return result.rows;
 }
@@ -56,8 +62,8 @@ async function getPopularFoods(limit = "4", lang = 'jp') {
  * Fetch a food along with its images and reviews.
  */
 
-async function findFoodWithRelations(foodId, lang = 'jp') {
-  if (lang === 'jp') {
+async function findFoodWithRelations(foodId, lang = "jp") {
+  if (lang === "jp") {
     // Query foods table
     const foodResult = await db.query(
       `SELECT food_id, name, story, ingredient, taste, style, comparison, region_id, view_count, rating, number_of_rating, created_at
@@ -137,15 +143,21 @@ async function findFoodWithRelations(foodId, lang = 'jp') {
 }
 
 async function getFilterOptions() {
-  const foodTypes = await db.query('SELECT food_type_id as id, name FROM food_types ORDER BY name');
-  const flavors = await db.query('SELECT flavor_id as id, name FROM flavors ORDER BY name');
-  const ingredients = await db.query('SELECT ingredient_id as id, name FROM ingredients ORDER BY name LIMIT 8'); // MAX 8 ingredients
+  const foodTypes = await db.query(
+    "SELECT food_type_id as id, name FROM food_types ORDER BY name"
+  );
+  const flavors = await db.query(
+    "SELECT flavor_id as id, name FROM flavors ORDER BY name"
+  );
+  const ingredients = await db.query(
+    "SELECT ingredient_id as id, name FROM ingredients ORDER BY name LIMIT 8"
+  ); // MAX 8 ingredients
 
   return {
     regions: regions.rows,
     food_types: foodTypes.rows,
     flavors: flavors.rows,
-    ingredients: ingredients.rows
+    ingredients: ingredients.rows,
   };
 }
 
@@ -154,14 +166,14 @@ async function getFilterOptions() {
  * @param {Object} filters - { region_ids, flavor_ids, ingredient_ids }
  */
 async function getAllFoods(filters = {}) {
-  const lang = filters.lang || 'jp';
+  const lang = filters.lang || "jp";
 
   const params = [];
   let paramIndex = 1;
 
   let sql;
 
-  if (lang === 'jp') {
+  if (lang === "jp") {
     sql = `
       SELECT 
         f.food_id,
@@ -215,7 +227,7 @@ async function getAllFoods(filters = {}) {
   }
 
   if (filters.search) {
-    if (lang === 'jp') {
+    if (lang === "jp") {
       sql += ` AND (f.name ILIKE $${paramIndex})`;
     } else {
       sql += ` AND (f.name ILIKE $${paramIndex} OR ft.name ILIKE $${paramIndex})`;
@@ -266,35 +278,55 @@ async function getAllFoods(filters = {}) {
     paramIndex++;
   }
 
-  // Filter by taste styles (from user preferences)
-  // taste_styles is an array of style keywords like 'udon_style', 'teriyaki_style', etc.
-  if (filters.taste_styles?.length) {
-    const styleConditions = filters.taste_styles.map((style, idx) => {
-      params.push(`%${style}%`);
-      return `f.style ILIKE $${paramIndex + idx}`;
-    });
-    sql += ` AND (${styleConditions.join(' OR ')})`;
-    paramIndex += filters.taste_styles.length;
+  // Filter by quen_thuoc (experience level) - hierarchical
+  // User with level N can see foods with quen_thuoc <= N
+  // Values: 1 = first_time (safest), 2 = not_familiar, 3 = frequent (all foods)
+  if (filters.quen_thuoc) {
+    sql += ` AND (f.quen_thuoc IS NULL OR f.quen_thuoc <= $${paramIndex})`;
+    params.push(filters.quen_thuoc);
+    paramIndex++;
   }
 
-  // Exclude foods with certain ingredients (for allergies)
-  // exclude_ingredients is an array of ingredient names to exclude
-  if (filters.exclude_ingredients?.length) {
-    sql += `
-      AND NOT EXISTS (
-        SELECT 1 FROM food_ingredients fi
-        JOIN ingredients i ON i.ingredient_id = fi.ingredient_id
-        WHERE fi.food_id = f.food_id
-          AND i.name ILIKE ANY($${paramIndex}::text[])
-      )
-    `;
-    params.push(filters.exclude_ingredients.map(ing => `%${ing}%`));
+  // Filter by mui_huong (smell tolerance) - hierarchical
+  // User with tolerance N can see foods with mui_huong <= N
+  // Values: 1 = no_smell, 2 = mild_ok, 3 = strong_ok (all foods)
+  if (filters.mui_huong) {
+    sql += ` AND (f.mui_huong IS NULL OR f.mui_huong <= $${paramIndex})`;
+    params.push(filters.mui_huong);
     paramIndex++;
+  }
+
+  // Filter by mon_tuong_tu (taste preference) - text contains overlap
+  // Show foods that have at least one matching style from user preference
+  // Values: 1-7 representing Japanese food style similarities stored as text "1,3,5"
+  if (filters.mon_tuong_tu?.length) {
+    sql += ` AND (f.mon_tuong_tu IS NOT NULL AND (`;
+    const orConditions = filters.mon_tuong_tu.map((value, idx) => {
+      params.push(`%${value}%`);
+      return `f.mon_tuong_tu LIKE $${paramIndex + idx}`;
+    });
+    sql += orConditions.join(" OR ");
+    sql += `))`;
+    paramIndex += filters.mon_tuong_tu.length;
+  }
+
+  // Filter by chua_nguyen_lieu (allergies) - exclude text contains
+  // Exclude foods that contain any allergen the user has
+  // Values: 1-8 representing different allergens stored as text "1,4"
+  if (filters.chua_nguyen_lieu?.length) {
+    sql += ` AND (f.chua_nguyen_lieu IS NULL OR (`;
+    const andConditions = filters.chua_nguyen_lieu.map((value, idx) => {
+      params.push(`%${value}%`);
+      return `f.chua_nguyen_lieu NOT LIKE $${paramIndex + idx}`;
+    });
+    sql += andConditions.join(" AND ");
+    sql += `))`;
+    paramIndex += filters.chua_nguyen_lieu.length;
   }
 
   // Filter by Japanese similar food (search in comparison field)
   if (filters.japanese_similar) {
-    if (lang === 'jp') {
+    if (lang === "jp") {
       sql += ` AND f.comparison ILIKE $${paramIndex}`;
     } else {
       sql += ` AND (f.comparison ILIKE $${paramIndex} OR ft.comparison ILIKE $${paramIndex})`;

@@ -1,6 +1,41 @@
-const FoodModel = require('../models/foodModel');
-const preferenceModel = require('../models/preferenceModel');
-const db = require('../db');
+const FoodModel = require("../models/foodModel");
+const preferenceModel = require("../models/preferenceModel");
+const db = require("../db");
+
+// Mapping constants for preference values to database IDs
+const EXPERIENCE_LEVEL_MAP = {
+  first_time: 1,
+  not_familiar: 2,
+  frequent: 3,
+};
+
+const SMELL_TOLERANCE_MAP = {
+  no_smell: 1,
+  mild_ok: 2,
+  strong_ok: 3,
+};
+
+const TASTE_PREFERENCE_MAP = {
+  udon: 1,
+  teriyaki: 2,
+  tempura: 3,
+  tsukemen: 4,
+  salad: 5,
+  takikomi: 6,
+  curry: 7,
+};
+
+const ALLERGY_MAP = {
+  none: null,
+  seafood: 1,
+  nuts: 2,
+  coriander: 3,
+  egg: 4,
+  dairy: 5,
+  gluten: 6,
+  soy: 7,
+  alcohol: 8,
+};
 
 function buildHttpError(status, message) {
   const error = new Error(message);
@@ -12,16 +47,16 @@ function buildHttpError(status, message) {
  * Business logic wrapper that validates input before hitting the DB.
  * @param {string} foodIdParam
  */
-async function getFoodDetails(foodIdParam, lang = 'jp') {
+async function getFoodDetails(foodIdParam, lang = "jp") {
   const foodId = Number.parseInt(foodIdParam, 10);
   if (Number.isNaN(foodId) || foodId <= 0) {
-    throw buildHttpError(400, 'foodId must be a positive integer');
+    throw buildHttpError(400, "foodId must be a positive integer");
   }
 
   try {
     const result = await FoodModel.findFoodWithRelations(foodId, lang);
     if (!result.food) {
-      throw buildHttpError(404, 'Food does not exist');
+      throw buildHttpError(404, "Food does not exist");
     }
 
     // result.images is an array of { food_image_id, image_url }
@@ -39,33 +74,40 @@ async function getFoodDetails(foodIdParam, lang = 'jp') {
       throw err;
     }
     // Log the actual error for debugging
-    console.error('Database error in getFoodDetails:', err);
+    console.error("Database error in getFoodDetails:", err);
     // Bubble up a sanitized error for unexpected DB issues.
-    throw buildHttpError(500, `Error when fetching food details: ${err.message}`);
+    throw buildHttpError(
+      500,
+      `Error when fetching food details: ${err.message}`
+    );
   }
 }
 
 async function deleteFood(foodIdParam) {
   const foodId = Number.parseInt(foodIdParam, 10);
   if (Number.isNaN(foodId) || foodId <= 0) {
-    throw buildHttpError(400, 'foodId must be a positive integer');
+    throw buildHttpError(400, "foodId must be a positive integer");
   }
 
   const client = db;
   try {
-    await client.query('BEGIN');
-    await client.query('DELETE FROM food_images WHERE food_id = $1', [foodId]);
-    await client.query('DELETE FROM food_translations WHERE food_id = $1', [foodId]);
-    const res = await client.query('DELETE FROM foods WHERE food_id = $1', [foodId]);
+    await client.query("BEGIN");
+    await client.query("DELETE FROM food_images WHERE food_id = $1", [foodId]);
+    await client.query("DELETE FROM food_translations WHERE food_id = $1", [
+      foodId,
+    ]);
+    const res = await client.query("DELETE FROM foods WHERE food_id = $1", [
+      foodId,
+    ]);
     if (res.rowCount === 0) {
-      await client.query('ROLLBACK');
-      throw buildHttpError(404, 'Food not found');
+      await client.query("ROLLBACK");
+      throw buildHttpError(404, "Food not found");
     }
-    await client.query('COMMIT');
+    await client.query("COMMIT");
     return true;
   } catch (err) {
-    await client.query('ROLLBACK');
-    console.error('Error in deleteFood:', err);
+    await client.query("ROLLBACK");
+    console.error("Error in deleteFood:", err);
     if (err.status) throw err;
     throw buildHttpError(500, `Error when deleting food: ${err.message}`);
   }
@@ -76,40 +118,56 @@ async function deleteFoodImage(foodIdParam, imageIdParam) {
   const foodId = Number.parseInt(foodIdParam, 10);
   const imageId = Number.parseInt(imageIdParam, 10);
   if (Number.isNaN(foodId) || foodId <= 0) {
-    throw buildHttpError(400, 'foodId must be a positive integer');
+    throw buildHttpError(400, "foodId must be a positive integer");
   }
   if (Number.isNaN(imageId) || imageId <= 0) {
-    throw buildHttpError(400, 'imageId must be a positive integer');
+    throw buildHttpError(400, "imageId must be a positive integer");
   }
 
   const client = db;
   try {
-    await client.query('BEGIN');
-    const sel = await client.query('SELECT image_url FROM food_images WHERE food_image_id = $1 AND food_id = $2', [imageId, foodId]);
+    await client.query("BEGIN");
+    const sel = await client.query(
+      "SELECT image_url FROM food_images WHERE food_image_id = $1 AND food_id = $2",
+      [imageId, foodId]
+    );
     if (sel.rowCount === 0) {
-      await client.query('ROLLBACK');
-      throw buildHttpError(404, 'Image not found');
+      await client.query("ROLLBACK");
+      throw buildHttpError(404, "Image not found");
     }
     const imageUrl = sel.rows[0].image_url;
 
     // attempt to remove file from disk if it's a local path
     try {
-      const fs = require('fs');
-      const path = require('path');
-      if (imageUrl && !imageUrl.startsWith('http') && !imageUrl.startsWith('data:')) {
-        const filePath = path.join(__dirname, '..', '..', 'public', imageUrl.replace(/^\//, ''));
+      const fs = require("fs");
+      const path = require("path");
+      if (
+        imageUrl &&
+        !imageUrl.startsWith("http") &&
+        !imageUrl.startsWith("data:")
+      ) {
+        const filePath = path.join(
+          __dirname,
+          "..",
+          "..",
+          "public",
+          imageUrl.replace(/^\//, "")
+        );
         if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
       }
     } catch (e) {
-      console.warn('Failed to remove image file from disk:', e.message || e);
+      console.warn("Failed to remove image file from disk:", e.message || e);
     }
 
-    const del = await client.query('DELETE FROM food_images WHERE food_image_id = $1 RETURNING *', [imageId]);
-    await client.query('COMMIT');
+    const del = await client.query(
+      "DELETE FROM food_images WHERE food_image_id = $1 RETURNING *",
+      [imageId]
+    );
+    await client.query("COMMIT");
     return del.rows[0];
   } catch (err) {
-    await client.query('ROLLBACK');
-    console.error('Error in deleteFoodImage:', err);
+    await client.query("ROLLBACK");
+    console.error("Error in deleteFoodImage:", err);
     if (err.status) throw err;
     throw buildHttpError(500, `Error when deleting food image: ${err.message}`);
   }
@@ -124,19 +182,21 @@ async function getAllFoods(filters) {
     const foods = await FoodModel.getAllFoods(filters);
     return foods;
   } catch (err) {
-    console.error('Database error in getAllFoods:', err);
+    console.error("Database error in getAllFoods:", err);
     throw buildHttpError(500, `Error when fetching food list: ${err.message}`);
   }
 }
 
-
-async function getPopularFoods(limit, lang = 'jp') {
+async function getPopularFoods(limit, lang = "jp") {
   try {
     const foods = await FoodModel.getPopularFoods(limit, lang);
     return foods;
   } catch (err) {
-    console.error('Database error in getPopularFoods:', err);
-    throw buildHttpError(500, `Error when fetching popular foods: ${err.message}`);
+    console.error("Database error in getPopularFoods:", err);
+    throw buildHttpError(
+      500,
+      `Error when fetching popular foods: ${err.message}`
+    );
   }
 }
 
@@ -148,20 +208,23 @@ async function getFilterOptions() {
     const options = await FoodModel.getFilterOptions();
     return options;
   } catch (err) {
-    console.error('Database error in getFilterOptions:', err);
-    throw buildHttpError(500, `Error when fetching filter options: ${err.message}`);
+    console.error("Database error in getFilterOptions:", err);
+    throw buildHttpError(
+      500,
+      `Error when fetching filter options: ${err.message}`
+    );
   }
 }
 
 // ----------------- Admin write methods -----------------
 async function createFood(payload, file) {
   if (!payload.name) {
-    throw buildHttpError(400, 'name is required');
+    throw buildHttpError(400, "name is required");
   }
 
   const client = db;
   try {
-    await client.query('BEGIN');
+    await client.query("BEGIN");
 
     const insertFood = `INSERT INTO foods (name, story, ingredient, taste, style, comparison, region_id) VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING *`;
     const foodRes = await client.query(insertFood, [
@@ -179,24 +242,49 @@ async function createFood(payload, file) {
     if (payload.translations) {
       const { vi, en } = payload.translations;
       if (vi) {
-        await client.query(`INSERT INTO food_translations (food_id, lang, name, story, ingredient, taste, style, comparison) VALUES ($1,'vi',$2,$3,$4,$5,$6,$7) ON CONFLICT (food_id, lang) DO UPDATE SET name = EXCLUDED.name, story = EXCLUDED.story, ingredient = EXCLUDED.ingredient, taste = EXCLUDED.taste, style = EXCLUDED.style, comparison = EXCLUDED.comparison`, [newFood.food_id, vi.name || null, vi.story || null, vi.ingredient || null, vi.taste || null, vi.style || null, vi.comparison || null]);
+        await client.query(
+          `INSERT INTO food_translations (food_id, lang, name, story, ingredient, taste, style, comparison) VALUES ($1,'vi',$2,$3,$4,$5,$6,$7) ON CONFLICT (food_id, lang) DO UPDATE SET name = EXCLUDED.name, story = EXCLUDED.story, ingredient = EXCLUDED.ingredient, taste = EXCLUDED.taste, style = EXCLUDED.style, comparison = EXCLUDED.comparison`,
+          [
+            newFood.food_id,
+            vi.name || null,
+            vi.story || null,
+            vi.ingredient || null,
+            vi.taste || null,
+            vi.style || null,
+            vi.comparison || null,
+          ]
+        );
       }
       if (en) {
-        await client.query(`INSERT INTO food_translations (food_id, lang, name, story, ingredient, taste, style, comparison) VALUES ($1,'en',$2,$3,$4,$5,$6,$7) ON CONFLICT (food_id, lang) DO UPDATE SET name = EXCLUDED.name, story = EXCLUDED.story, ingredient = EXCLUDED.ingredient, taste = EXCLUDED.taste, style = EXCLUDED.style, comparison = EXCLUDED.comparison`, [newFood.food_id, en.name || null, en.story || null, en.ingredient || null, en.taste || null, en.style || null, en.comparison || null]);
+        await client.query(
+          `INSERT INTO food_translations (food_id, lang, name, story, ingredient, taste, style, comparison) VALUES ($1,'en',$2,$3,$4,$5,$6,$7) ON CONFLICT (food_id, lang) DO UPDATE SET name = EXCLUDED.name, story = EXCLUDED.story, ingredient = EXCLUDED.ingredient, taste = EXCLUDED.taste, style = EXCLUDED.style, comparison = EXCLUDED.comparison`,
+          [
+            newFood.food_id,
+            en.name || null,
+            en.story || null,
+            en.ingredient || null,
+            en.taste || null,
+            en.style || null,
+            en.comparison || null,
+          ]
+        );
       }
     }
 
     if (file) {
       const imageUrl = `/uploads/foods/${file.filename}`;
-      await client.query(`INSERT INTO food_images (food_id, image_url, display_order, is_primary) VALUES ($1,$2,$3,$4)`, [newFood.food_id, imageUrl, 1, true]);
+      await client.query(
+        `INSERT INTO food_images (food_id, image_url, display_order, is_primary) VALUES ($1,$2,$3,$4)`,
+        [newFood.food_id, imageUrl, 1, true]
+      );
     }
 
-    await client.query('COMMIT');
+    await client.query("COMMIT");
 
-    return await getFoodDetails(newFood.food_id, 'jp');
+    return await getFoodDetails(newFood.food_id, "jp");
   } catch (err) {
-    await client.query('ROLLBACK');
-    console.error('Error in createFood:', err);
+    await client.query("ROLLBACK");
+    console.error("Error in createFood:", err);
     throw buildHttpError(500, `Error when creating food: ${err.message}`);
   }
 }
@@ -204,12 +292,12 @@ async function createFood(payload, file) {
 async function updateFood(foodIdParam, payload, file) {
   const foodId = Number.parseInt(foodIdParam, 10);
   if (Number.isNaN(foodId) || foodId <= 0) {
-    throw buildHttpError(400, 'foodId must be a positive integer');
+    throw buildHttpError(400, "foodId must be a positive integer");
   }
 
   const client = db;
   try {
-    await client.query('BEGIN');
+    await client.query("BEGIN");
 
     const updateSql = `UPDATE foods SET name = COALESCE($1,name), story = COALESCE($2,story), ingredient = COALESCE($3,ingredient), taste = COALESCE($4,taste), style = COALESCE($5,style), comparison = COALESCE($6,comparison), region_id = COALESCE($7,region_id) WHERE food_id = $8 RETURNING *`;
     const res = await client.query(updateSql, [
@@ -224,31 +312,56 @@ async function updateFood(foodIdParam, payload, file) {
     ]);
 
     if (res.rowCount === 0) {
-      throw buildHttpError(404, 'Food not found');
+      throw buildHttpError(404, "Food not found");
     }
 
     // translations
     if (payload.translations) {
       const { vi, en } = payload.translations;
       if (vi) {
-        await client.query(`INSERT INTO food_translations (food_id, lang, name, story, ingredient, taste, style, comparison) VALUES ($1,'vi',$2,$3,$4,$5,$6,$7) ON CONFLICT (food_id, lang) DO UPDATE SET name = EXCLUDED.name, story = EXCLUDED.story, ingredient = EXCLUDED.ingredient, taste = EXCLUDED.taste, style = EXCLUDED.style, comparison = EXCLUDED.comparison`, [foodId, vi.name || null, vi.story || null, vi.ingredient || null, vi.taste || null, vi.style || null, vi.comparison || null]);
+        await client.query(
+          `INSERT INTO food_translations (food_id, lang, name, story, ingredient, taste, style, comparison) VALUES ($1,'vi',$2,$3,$4,$5,$6,$7) ON CONFLICT (food_id, lang) DO UPDATE SET name = EXCLUDED.name, story = EXCLUDED.story, ingredient = EXCLUDED.ingredient, taste = EXCLUDED.taste, style = EXCLUDED.style, comparison = EXCLUDED.comparison`,
+          [
+            foodId,
+            vi.name || null,
+            vi.story || null,
+            vi.ingredient || null,
+            vi.taste || null,
+            vi.style || null,
+            vi.comparison || null,
+          ]
+        );
       }
       if (en) {
-        await client.query(`INSERT INTO food_translations (food_id, lang, name, story, ingredient, taste, style, comparison) VALUES ($1,'en',$2,$3,$4,$5,$6,$7) ON CONFLICT (food_id, lang) DO UPDATE SET name = EXCLUDED.name, story = EXCLUDED.story, ingredient = EXCLUDED.ingredient, taste = EXCLUDED.taste, style = EXCLUDED.style, comparison = EXCLUDED.comparison`, [foodId, en.name || null, en.story || null, en.ingredient || null, en.taste || null, en.style || null, en.comparison || null]);
+        await client.query(
+          `INSERT INTO food_translations (food_id, lang, name, story, ingredient, taste, style, comparison) VALUES ($1,'en',$2,$3,$4,$5,$6,$7) ON CONFLICT (food_id, lang) DO UPDATE SET name = EXCLUDED.name, story = EXCLUDED.story, ingredient = EXCLUDED.ingredient, taste = EXCLUDED.taste, style = EXCLUDED.style, comparison = EXCLUDED.comparison`,
+          [
+            foodId,
+            en.name || null,
+            en.story || null,
+            en.ingredient || null,
+            en.taste || null,
+            en.style || null,
+            en.comparison || null,
+          ]
+        );
       }
     }
 
     if (file) {
       const imageUrl = `/uploads/foods/${file.filename}`;
-      await client.query(`INSERT INTO food_images (food_id, image_url, display_order, is_primary) VALUES ($1,$2,$3,$4)`, [foodId, imageUrl, 1, false]);
+      await client.query(
+        `INSERT INTO food_images (food_id, image_url, display_order, is_primary) VALUES ($1,$2,$3,$4)`,
+        [foodId, imageUrl, 1, false]
+      );
     }
 
-    await client.query('COMMIT');
+    await client.query("COMMIT");
 
-    return await getFoodDetails(foodId, 'jp');
+    return await getFoodDetails(foodId, "jp");
   } catch (err) {
-    await client.query('ROLLBACK');
-    console.error('Error in updateFood:', err);
+    await client.query("ROLLBACK");
+    console.error("Error in updateFood:", err);
     if (err.status) throw err;
     throw buildHttpError(500, `Error when updating food: ${err.message}`);
   }
@@ -257,24 +370,28 @@ async function updateFood(foodIdParam, payload, file) {
 async function deleteFood(foodIdParam) {
   const foodId = Number.parseInt(foodIdParam, 10);
   if (Number.isNaN(foodId) || foodId <= 0) {
-    throw buildHttpError(400, 'foodId must be a positive integer');
+    throw buildHttpError(400, "foodId must be a positive integer");
   }
 
   const client = db;
   try {
-    await client.query('BEGIN');
-    await client.query('DELETE FROM food_images WHERE food_id = $1', [foodId]);
-    await client.query('DELETE FROM food_translations WHERE food_id = $1', [foodId]);
-    const res = await client.query('DELETE FROM foods WHERE food_id = $1', [foodId]);
+    await client.query("BEGIN");
+    await client.query("DELETE FROM food_images WHERE food_id = $1", [foodId]);
+    await client.query("DELETE FROM food_translations WHERE food_id = $1", [
+      foodId,
+    ]);
+    const res = await client.query("DELETE FROM foods WHERE food_id = $1", [
+      foodId,
+    ]);
     if (res.rowCount === 0) {
-      await client.query('ROLLBACK');
-      throw buildHttpError(404, 'Food not found');
+      await client.query("ROLLBACK");
+      throw buildHttpError(404, "Food not found");
     }
-    await client.query('COMMIT');
+    await client.query("COMMIT");
     return true;
   } catch (err) {
-    await client.query('ROLLBACK');
-    console.error('Error in deleteFood:', err);
+    await client.query("ROLLBACK");
+    console.error("Error in deleteFood:", err);
     if (err.status) throw err;
     throw buildHttpError(500, `Error when deleting food: ${err.message}`);
   }
@@ -283,18 +400,21 @@ async function deleteFood(foodIdParam) {
 async function addFoodImage(foodIdParam, file) {
   const foodId = Number.parseInt(foodIdParam, 10);
   if (Number.isNaN(foodId) || foodId <= 0) {
-    throw buildHttpError(400, 'foodId must be a positive integer');
+    throw buildHttpError(400, "foodId must be a positive integer");
   }
   if (!file) {
-    throw buildHttpError(400, 'file is required');
+    throw buildHttpError(400, "file is required");
   }
 
   try {
     const imageUrl = `/uploads/foods/${file.filename}`;
-    const res = await db.query(`INSERT INTO food_images (food_id, image_url, display_order, is_primary) VALUES ($1,$2,$3,$4) RETURNING *`, [foodId, imageUrl, 1, false]);
+    const res = await db.query(
+      `INSERT INTO food_images (food_id, image_url, display_order, is_primary) VALUES ($1,$2,$3,$4) RETURNING *`,
+      [foodId, imageUrl, 1, false]
+    );
     return res.rows[0];
   } catch (err) {
-    console.error('Error in addFoodImage:', err);
+    console.error("Error in addFoodImage:", err);
     throw buildHttpError(500, `Error when adding food image: ${err.message}`);
   }
 }
@@ -320,15 +440,22 @@ module.exports = {
  * @param {object} additionalFilters - Additional filter params from query
  * @returns {Promise<Array>} - Filtered foods
  */
-async function filterFoodsByPreference(userId, targetName, additionalFilters = {}) {
+async function filterFoodsByPreference(
+  userId,
+  targetName,
+  additionalFilters = {}
+) {
   try {
     // Get user preference
-    const preference = await preferenceModel.getByUserIdAndTarget(userId, targetName);
-    
+    const preference = await preferenceModel.getByUserIdAndTarget(
+      userId,
+      targetName
+    );
+
     // Build filters from preference (preference takes priority over additionalFilters)
     const filters = {
-      lang: additionalFilters.lang || 'jp',
-      search: additionalFilters.search || '',
+      lang: additionalFilters.lang || "jp",
+      search: additionalFilters.search || "",
       flavor_ids: additionalFilters.flavor_ids || [],
       ingredient_ids: additionalFilters.ingredient_ids || [],
       food_type_ids: additionalFilters.food_type_ids || [],
@@ -336,17 +463,55 @@ async function filterFoodsByPreference(userId, targetName, additionalFilters = {
 
     // Map preference fields to filter criteria
     if (preference) {
-      // taste_preference -> taste_styles (filter by food.style field)
-      if (preference.taste_preference && Array.isArray(preference.taste_preference) && preference.taste_preference.length > 0) {
-        filters.taste_styles = preference.taste_preference;
+      // experience_level -> quen_thuoc (hierarchical: user level >= food level)
+      // Values: 1 = first_time, 2 = not_familiar, 3 = frequent
+      if (preference.experience_level) {
+        const mappedLevel = EXPERIENCE_LEVEL_MAP[preference.experience_level];
+        if (mappedLevel) {
+          filters.quen_thuoc = mappedLevel;
+        }
       }
 
-      // allergies -> exclude_ingredients (exclude foods with matching ingredients)
-      if (preference.allergies && Array.isArray(preference.allergies) && preference.allergies.length > 0) {
-        // Filter out 'none' value
-        const actualAllergies = preference.allergies.filter(a => a !== 'none');
-        if (actualAllergies.length > 0) {
-          filters.exclude_ingredients = actualAllergies;
+      // smell_tolerance -> mui_huong (hierarchical: user tolerance >= food smell)
+      // Values: 1 = no_smell, 2 = mild_ok, 3 = strong_ok
+      if (preference.smell_tolerance) {
+        const mappedSmell = SMELL_TOLERANCE_MAP[preference.smell_tolerance];
+        if (mappedSmell) {
+          filters.mui_huong = mappedSmell;
+        }
+      }
+
+      // taste_preference -> mon_tuong_tu (text overlap)
+      // Map string values ('udon', 'tempura') to numbers (1, 3) for database comparison
+      // Values: 1-7 representing different Japanese food styles stored as text "1,3,5"
+      if (
+        preference.taste_preference &&
+        Array.isArray(preference.taste_preference) &&
+        preference.taste_preference.length > 0
+      ) {
+        const mappedTastes = preference.taste_preference
+          .map((taste) => TASTE_PREFERENCE_MAP[taste])
+          .filter((val) => val !== undefined);
+
+        if (mappedTastes.length > 0) {
+          filters.mon_tuong_tu = mappedTastes;
+        }
+      }
+
+      // allergies -> chua_nguyen_lieu (exclude foods containing allergens)
+      // Map string values ('seafood', 'nuts') to numbers (1, 2) for database comparison
+      // Values: 1-8 representing different allergens stored as text "1,4"
+      if (
+        preference.allergies &&
+        Array.isArray(preference.allergies) &&
+        preference.allergies.length > 0
+      ) {
+        const mappedAllergies = preference.allergies
+          .map((allergy) => ALLERGY_MAP[allergy])
+          .filter((val) => val !== null && val !== undefined);
+
+        if (mappedAllergies.length > 0) {
+          filters.chua_nguyen_lieu = mappedAllergies;
         }
       }
     }
@@ -359,28 +524,34 @@ async function filterFoodsByPreference(userId, targetName, additionalFilters = {
     const foods = await FoodModel.getAllFoods(filters);
     return foods;
   } catch (err) {
-    console.error('Error in filterFoodsByPreference:', err);
-    throw buildHttpError(500, `Error when filtering foods by preference: ${err.message}`);
+    console.error("Error in filterFoodsByPreference:", err);
+    throw buildHttpError(
+      500,
+      `Error when filtering foods by preference: ${err.message}`
+    );
   }
 }
 
 async function addReview(foodIdParam, userId, rating, comment) {
   const foodId = Number.parseInt(foodIdParam, 10);
   if (Number.isNaN(foodId) || foodId <= 0) {
-    throw buildHttpError(400, 'foodId must be a positive integer');
+    throw buildHttpError(400, "foodId must be a positive integer");
   }
   if (!rating || rating < 1 || rating > 5) {
-    throw buildHttpError(400, 'Rating must be between 1 and 5');
+    throw buildHttpError(400, "Rating must be between 1 and 5");
   }
 
   const client = db;
   try {
-    await client.query('BEGIN');
+    await client.query("BEGIN");
 
     // 1. Check if food exists
-    const foodCheck = await client.query('SELECT food_id, rating, number_of_rating FROM foods WHERE food_id = $1 FOR UPDATE', [foodId]);
+    const foodCheck = await client.query(
+      "SELECT food_id, rating, number_of_rating FROM foods WHERE food_id = $1 FOR UPDATE",
+      [foodId]
+    );
     if (foodCheck.rowCount === 0) {
-      throw buildHttpError(404, 'Food not found');
+      throw buildHttpError(404, "Food not found");
     }
     const currentFood = foodCheck.rows[0];
 
@@ -391,7 +562,12 @@ async function addReview(foodIdParam, userId, rating, comment) {
       VALUES ($1, $2, 'food', $3, $4, NOW())
       RETURNING *
     `;
-    const reviewRes = await client.query(insertReviewSql, [userId, foodId, comment || '', rating]);
+    const reviewRes = await client.query(insertReviewSql, [
+      userId,
+      foodId,
+      comment || "",
+      rating,
+    ]);
     const newReview = reviewRes.rows[0];
 
     // 3. Update calculate new average rating
@@ -399,23 +575,24 @@ async function addReview(foodIdParam, userId, rating, comment) {
     const oldRating = parseFloat(currentFood.rating) || 0;
     const oldCount = parseInt(currentFood.number_of_rating) || 0;
 
-    // We can also query the average from the reviews table table to be more precise over time, 
+    // We can also query the average from the reviews table table to be more precise over time,
     // avoiding floating point drift, but for now incremental update is fine for performance.
 
     const newCount = oldCount + 1;
-    const newAverage = ((oldRating * oldCount) + rating) / newCount;
+    const newAverage = (oldRating * oldCount + rating) / newCount;
 
-    await client.query('UPDATE foods SET rating = $1, number_of_rating = $2 WHERE food_id = $3', [newAverage, newCount, foodId]);
+    await client.query(
+      "UPDATE foods SET rating = $1, number_of_rating = $2 WHERE food_id = $3",
+      [newAverage, newCount, foodId]
+    );
 
-    await client.query('COMMIT');
+    await client.query("COMMIT");
 
     return newReview;
   } catch (err) {
-    await client.query('ROLLBACK');
-    console.error('Error in addReview:', err);
+    await client.query("ROLLBACK");
+    console.error("Error in addReview:", err);
     if (err.status) throw err;
     throw buildHttpError(500, `Error when adding review: ${err.message}`);
   }
 }
-
-
